@@ -1,3 +1,8 @@
+(use-package company-rtags
+  :ensure t)
+(use-package flycheck-rtags
+  :ensure t)
+
 ;; ensure that we use only rtags checking
 ;; https://github.com/Andersbakken/rtags#optional-1
 (defun setup-flycheck-rtags ()
@@ -66,22 +71,3 @@
   	 ("C-c i" . rtags-get-include-file-for-symbol)))
 
 (setq rtags-display-result-backend 'helm)
-
-
-;;======> улучшает работу Rtags 
-;;(load-user-file "helmconfig.el")
-
-;; ======> пакет для индексирования C/C++ кода и хранения постоянной базы данных ссылок, деклараций и тп.
-;;(require 'rtags)
-;;(require 'company-rtags)
-
-;;(setq rtags-completions-enabled t)
-;;(eval-after-load 'company
-;;  '(add-to-list
-;;    'company-backends 'company-rtags))
-;;(setq rtags-autostart-diagnostics t)
-;;(rtags-enable-standard-keybindings)
-
-;;(require 'rtags-helm)
-;;(setq rtags-use-helm t)
-

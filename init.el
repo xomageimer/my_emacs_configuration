@@ -254,6 +254,9 @@
 (setq which-key-side-window-location 'right)
 
 ;; load tab and backtab keys for editing
+(load-user-file "helmconfig.el")
+
+;; load tab and backtab keys for editing
 (load-user-file "normaltabs.el")
 
 ;; load cpp configuration
