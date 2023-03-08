@@ -248,9 +248,10 @@
         completion-category-overrides '((file (styles partial-completion)))))
 ;; <================ Vertico
 
-(use-package emamux
-  :ensure t
-  :bind (("C-c t" . emamux:send-command)))
+(add-to-list 'load-path "~/.emacs.d/./elpa/which-key-20220811.1616/which-key.el")
+(require 'which-key)
+(which-key-mode t)
+(setq which-key-side-window-location 'right)
 
 ;; load tab and backtab keys for editing
 (load-user-file "normaltabs.el")
@@ -269,7 +270,7 @@
  '(global-display-line-numbers-mode t)
  '(menu-bar-mode nil)
  '(package-selected-packages
-   '(emamux:cloning-window-state emamux realgud auto-complete-clang cmake-ide rtags-xref ivy-rtags ac-rtags magit smartparens company solarized-theme vertico consult use-package compat))
+   '(neotree which-key rtags-xref ivy-rtags ac-rtags magit smartparens company solarized-theme vertico consult use-package compat))
  '(recentf-mode t)
  '(tab-bar-mode t)
  '(tool-bar-mode nil))
