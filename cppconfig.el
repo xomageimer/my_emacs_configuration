@@ -28,15 +28,26 @@
   (setq rtags-completions-enabled t)
   (push 'company-rtags company-backends)
   (global-company-mode)
-  (define-key c-mode-base-map (kbd "<C-tab>") (function company-complete))
+  (define-key c-mode-base-map (kbd "<C-c C-z>") (function company-complete))
   ;; use rtags flycheck mode -- clang warnings shown inline
   (require 'flycheck-rtags)
   ;; c-mode-common-hook is also called by c++-mode
   (add-hook 'c-mode-common-hook #'setup-flycheck-rtags))
-;;(require 'rtags)
-;;(cmake-ide-setup)
-;;(add-hook 'c-mode-hook 'rtags-start-process-unless-running)
-;;(add-hook 'c++-mode-hook 'rtags-start-process-unless-running)
+
+(require 'rtags)
+(cmake-ide-setup)
+(add-hook 'c-mode-hook 'rtags-start-process-unless-running)
+(add-hook 'c++-mode-hook 'rtags-start-process-unless-running)
+(add-hook 'objc-mode-hook 'irony-mode)
+
+(defun my-irony-mode-hook ()
+  (define-key irony-mode-map [remap completion-at-point]
+    'irony-completion-at-point-async)
+  (define-key irony-mode-map [remap complete-symbol]
+    'irony-completion-at-point-async))
+
+(add-hook 'irony-mode-hook 'my-irony-mode-hook)
+(add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
 
 (use-package rtags
   :ensure t
@@ -65,23 +76,6 @@
   	 ("C-c I" . rtags-include-file)
   	 ("C-c i" . rtags-get-include-file-for-symbol)))
 
+
 (setq rtags-display-result-backend 'helm)
-
-
-;;======> улучшает работу Rtags 
-;;(load-user-file "helmconfig.el")
-
-;; ======> пакет для индексирования C/C++ кода и хранения постоянной базы данных ссылок, деклараций и тп.
-;;(require 'rtags)
-;;(require 'company-rtags)
-
-;;(setq rtags-completions-enabled t)
-;;(eval-after-load 'company
-;;  '(add-to-list
-;;    'company-backends 'company-rtags))
-;;(setq rtags-autostart-diagnostics t)
-;;(rtags-enable-standard-keybindings)
-
-;;(require 'rtags-helm)
-;;(setq rtags-use-helm t)
 

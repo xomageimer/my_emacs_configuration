@@ -248,6 +248,10 @@
         completion-category-overrides '((file (styles partial-completion)))))
 ;; <================ Vertico
 
+(use-package emamux
+  :ensure t
+  :bind (("C-c t" . emamux:send-command)))
+
 ;; load tab and backtab keys for editing
 (load-user-file "normaltabs.el")
 
@@ -265,7 +269,7 @@
  '(global-display-line-numbers-mode t)
  '(menu-bar-mode nil)
  '(package-selected-packages
-   '(rtags-xref ivy-rtags ac-rtags magit smartparens company solarized-theme vertico consult use-package compat))
+   '(emamux:cloning-window-state emamux realgud auto-complete-clang cmake-ide rtags-xref ivy-rtags ac-rtags magit smartparens company solarized-theme vertico consult use-package compat))
  '(recentf-mode t)
  '(tab-bar-mode t)
  '(tool-bar-mode nil))
