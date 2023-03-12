@@ -8,7 +8,7 @@
 (defun xx ()
   "print current word."
   (interactive)
-  (message "%s" (thing-at-point 'word)))
+  (message "%s" (thing-at-point 'sentence)))
 
 
 ;;(defun execute-send-comand (beg end)
@@ -21,11 +21,56 @@
   "Save the space-delimited string at point to the kill ring."
   (interactive)
   (save-excursion
-    (let ((beg (progn (skip-syntax-backward "^" (line-beginning-position))
+    (let ((beg (progn (skip-syntax-backward "^{" (line-beginning-position))
                       (point)))
-          (end (progn (skip-syntax-forward "^" (line-end-position))
+          (end (progn (skip-syntax-forward "^}" (line-end-position))
                       (point))))
       (copy-region-as-kill beg end))))
+
+(defun my-get-boundary-and-thing ()
+  "example of using `bounds-of-thing-at-point'"
+  (interactive)
+  (let (bounds pos1 pos2 mything)
+    (setq bounds (bounds-of-thing-at-point 'line))
+    (setq pos1 (car bounds))
+    (setq pos2 (cdr bounds))
+    (setq mything (buffer-substring-no-properties pos1 pos2))
+
+    (message 
+     "thing begin at [%s], end at [%s], thing is [%s]"
+     pos1 pos2 mything)))
+
+;; ChatGPT
+
+(defun boost-test-case-bounds ()
+  "Returns the boundaries of the Boost test case around the current point.
+   If the current point is not inside a Boost test case, returns nil."
+  (save-excursion
+    (when (search-backward-regexp "BOOST_FIXTURE_TEST_CASE(" nil t)
+      (let ((start (match-beginning 0))
+            (end (progn (forward-sexp) (point))))
+        (when (<= start (point) end)
+          (cons start end))))))
+
+(defun boost-test-case-bounds-at-point ()
+  "Returns the boundaries of the Boost test case at the current point.
+   If the current point is not inside a Boost test case, returns nil."
+  (let ((bounds (boost-test-case-bounds)))
+    (when (and bounds (<= (car bounds) (point) (cdr bounds)))
+      bounds)))
+
+(defun my-boost-test-case-name ()
+  "Get the name of the Boost test case at point."
+  (interactive)
+  (let ((bounds (boost-test-case-bounds-at-point)))
+    (if bounds
+        (let ((name (boost-test-case-name-at-point)))
+          (if name
+              (message "Boost test case name: %s" name)
+            (message "No test case name found at point")))
+      (message "No Boost test case found at point"))))
+
+(global-set-key (kbd "M-.") 'my-boost-test-case-name)
 
 
 ;;(defun my-string-at-point ()
@@ -38,5 +83,24 @@
 ;;                      (point))))
 ;;      (execute-send-comand beg end))))
 
+BOOST_FIXTURE_TEST_CASE(ShouldBlaBlaBla, Fixture)
+        {
+            Start();
+        
+            auto MakeSomeJob = [&]() 
+            {
+               // ...
+            };
+    
+            // ...
+    
+            {
+                BOOST_CHECK(MakeSomeJob());
+            }
+        }BOOST_TEST_CASE(ABOBA, ABIBA_FIXTURE)
 
-(global-set-key (kbd "M-.") 'my-string-at-point)
+
+
+
+
+

@@ -262,6 +262,8 @@
 ;; load cpp configuration
 (load-user-file "cppconfig.el")
 
+(load-user-file "deffunctions.el")
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -270,6 +272,7 @@
  '(custom-enabled-themes '(solarized-dark-high-contrast))
  '(custom-safe-themes
    '("7f1d414afda803f3244c6fb4c2c64bea44dac040ed3731ec9d75275b9e831fe5" "fee7287586b17efbfda432f05539b58e86e059e78006ce9237b8732fde991b4c" default))
+ '(gdb-many-windows t)
  '(global-display-line-numbers-mode t)
  '(menu-bar-mode nil)
  '(package-selected-packages
