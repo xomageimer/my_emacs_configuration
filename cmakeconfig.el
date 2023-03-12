@@ -1,16 +1,6 @@
-(use-package projectile-cmake
-  :load-path "~/.emacs.d/unofficial_packages"
-  :config
-  (add-hook 'projectile-after-switch-project-hook 'projectile-cmake-init))
-
 (use-package projectile
   :config
   (projectile-mode +1))
-
-(use-package projectile-cmake
-  :after projectile
-  :config
-  (projectile-cmake-mode))
 
 (defun compile-project (target)
   (interactive "MEnter target name: ")
@@ -20,13 +10,15 @@
 
 (defun build-and-run-project (target)
   (interactive "MEnter target name: ")
+  (compile-project target)
   (let ((build-dir (concat (projectile-project-root) "build/"))
         (compile-command (concat "cd " (projectile-project-root) " && cmake --build build --target " target " && " (projectile-project-root) "build/" target)))
     (compile compile-command)
-    (gud-run (concat "gdb -i=mi " (concat (projectile-project-root) "build/" target)))))
+    (async-shell-command (concat (projectile-project-root) "build/" target))))
 
 (defun build-and-debug-project (target)
   (interactive "MEnter target name: ")
+  (compile-project target)
   (let ((build-dir (concat (projectile-project-root) "build/"))
         (compile-command (concat "cd " (projectile-project-root) " && cmake --build build --target " target)))
     (compile compile-command)
