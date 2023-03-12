@@ -1,6 +1,16 @@
+(use-package projectile-cmake
+  :load-path "~/.emacs.d/unofficial_packages"
+  :config
+  (add-hook 'projectile-after-switch-project-hook 'projectile-cmake-init))
+
 (use-package projectile
   :config
   (projectile-mode +1))
+
+(use-package projectile-cmake
+  :after projectile
+  :config
+  (projectile-cmake-mode))
 
 (defun compile-project (target)
   (interactive "MEnter target name: ")
