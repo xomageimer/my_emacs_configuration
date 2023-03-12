@@ -10,6 +10,7 @@
   "Load a file in current user's configuration directory"
   (load-file (expand-file-name file user-init-dir)))
 
+(load-user-file "deffunctions.el")
 
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
@@ -248,10 +249,11 @@
         completion-category-overrides '((file (styles partial-completion)))))
 ;; <================ Vertico
 
-(add-to-list 'load-path "~/.emacs.d/./elpa/which-key-20220811.1616/which-key.el")
-(require 'which-key)
-(which-key-mode t)
-(setq which-key-side-window-location 'right)
+(use-package which-key
+  :ensure t
+  :config
+  (which-key-mode)
+  (setq which-key-side-window-location 'right))
 
 ;; load tab and backtab keys for editing
 (load-user-file "helmconfig.el")
@@ -262,7 +264,11 @@
 ;; load cpp configuration
 (load-user-file "cppconfig.el")
 
-(load-user-file "deffunctions.el")
+;; load cmake configuration
+(load-user-file "cmakeconfig.el")
+
+(delete-selection-mode 1)   ; включаем режим удаления выделенного текста
+(setq yank-undo-function 'yank-unbounded)   ; настраиваем замену выделенного текста при вставке
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -276,7 +282,7 @@
  '(global-display-line-numbers-mode t)
  '(menu-bar-mode nil)
  '(package-selected-packages
-   '(neotree which-key rtags-xref ivy-rtags ac-rtags magit smartparens company solarized-theme vertico consult use-package compat))
+   '(projectile cmake-mode yasnippet-snippets realgud-jdb neotree which-key rtags-xref ivy-rtags ac-rtags magit smartparens company solarized-theme vertico consult use-package compat))
  '(recentf-mode t)
  '(tab-bar-mode t)
  '(tool-bar-mode nil))
