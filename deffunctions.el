@@ -60,18 +60,15 @@
       bounds)))
 
 (defun my-boost-test-case-name ()
-  "Get the name of the Boost test case at point."
+  "Get the name of the Boost test case function at point."
   (interactive)
-  (let ((bounds (boost-test-case-bounds-at-point)))
-    (if bounds
-        (let ((name (boost-test-case-name-at-point)))
-          (if name
-              (message "Boost test case name: %s" name)
-            (message "No test case name found at point")))
+  (let ((case-start (re-search-backward "\\_<BOOST_FIXTURE_TEST_CASE( *\\([^,]+\\)" nil t)))
+    (if case-start
+        (let ((name (match-string 1)))
+          (message "Boost test case function name: %s" name))
       (message "No Boost test case found at point"))))
 
-(global-set-key (kbd "M-.") 'my-boost-test-case-name)
-
+(global-set-key (kbd "M-t") 'my-boost-test-case-name)
 
 ;;(defun my-string-at-point ()
 ;;  "Save the space-delimited string at point to the kill ring."
@@ -82,22 +79,6 @@
 ;;          (end (progn (skip-syntax-forward "^" (line-end-position))
 ;;                      (point))))
 ;;      (execute-send-comand beg end))))
-
-BOOST_FIXTURE_TEST_CASE(ShouldBlaBlaBla, Fixture)
-        {
-            Start();
-        
-            auto MakeSomeJob = [&]() 
-            {
-               // ...
-            };
-    
-            // ...
-    
-            {
-                BOOST_CHECK(MakeSomeJob());
-            }
-        }BOOST_TEST_CASE(ABOBA, ABIBA_FIXTURE)
 
 
 
