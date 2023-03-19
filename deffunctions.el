@@ -68,7 +68,7 @@
           (message "Boost test case function name: %s" name))
       (message "No Boost test case found at point"))))
 
-(global-set-key (kbd "M-t") 'my-boost-test-case-name)
+;; (global-set-key (kbd "M-t") 'my-boost-test-case-name)
 
 ;;(defun my-string-at-point ()
 ;;  "Save the space-delimited string at point to the kill ring."
@@ -80,8 +80,45 @@
 ;;                      (point))))
 ;;      (execute-send-comand beg end))))
 
+(defun insert-cmake-code ()
+  (interactive)
+  (let ((root-dir (locate-dominating-file default-directory "CMakeLists.txt")))
+    (if root-dir
+        (progn
+          (setq root-dir (expand-file-name root-dir))
+          (let ((cmakelists (concat root-dir "/CMakeLists.txt")))
+            (if (file-exists-p cmakelists)
+                (progn
+                  (write-region
+                   "function(get_all_targets var)\n"
+                   "  set(targets)\n"
+                   "  get_all_targets_recursive(targets ${CMAKE_CURRENT_SOURCE_DIR})\n"
+                   "  set(${var} ${targets} PARENT_SCOPE)\n"
+                   "endfunction()\n"
+                   "\n"
+                   "macro(get_all_targets_recursive targets dir)\n"
+                   "  get_property(subdirectories DIRECTORY ${dir} PROPERTY SUBDIRECTORIES)\n"
+                   "  foreach(subdir ${subdirectories})\n"
+                   "    get_all_targets_recursive(${targets} ${subdir})\n"
+                   "  endforeach()\n"
+                   "\n"
+                   "  get_property(current_targets DIRECTORY ${dir} PROPERTY BUILDSYSTEM_TARGETS)\n"
+                   "  list(APPEND ${targets} ${current_targets})\n"
+                   "endmacro()\n"
+                   "\n"
+                   "function(main)\n"
+                   "  get_all_targets(all_targets)\n"
+                   "  message(\"All targets: ${all_targets}\")\n"
+                   "endfunction()\n"
+                   "\n"
+                   "main()\n"
+                   "\n"
+                   nil
+		   (cmakelists)
+		   t)
+                  (message "CMake code inserted at the end of CMakeLists.txt."))
+              (message "CMakeLists.txt file not found."))))
+      (message "Could not find root CMakeLists.txt file."))))
 
 
-
-
-
+(global-set-key (kbd "M-t") 'insert-cmake-code)
