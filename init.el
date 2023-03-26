@@ -42,8 +42,11 @@
 (use-package smartparens
   :config (smartparens-global-mode 1))
 
+(use-package ansi-color
+  :ensure t)
+
 (use-package neotree
-  :bind ([f8] . neotree-toggle)
+  :bind ([f9] . neotree-toggle)
   :init (setq neo-window-width 35)
   :config (setq neo-smart-open nil))
 

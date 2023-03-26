@@ -3,18 +3,21 @@
   (projectile-mode +1))
 
 (defun my-cmake-build ()
-  "Build the cmake project in the current directory."
+  "Compile CMake project using LSP."
   (interactive)
-  (let ((project-root (projectile-project-root)))
-    (if (not project-root)
-        (error "Could not find project root directory")
-      (let* ((build-dir (concat project-root "build"))
-             (command (concat "cd " build-dir " && cmake .. && make"))
-             (compilation-buffer-name-function (lambda (major-mode-name) "*cmake-build*")))
-        (unless (file-directory-p build-dir)
-          (make-directory build-dir))
-        (setq default-directory build-dir)
-        (compile command)))))
+  (let ((default-directory (projectile-project-root))
+        (compilation-scroll-output t)
+        (compilation-finish-function (lambda (buf str)
+                                        (let ((ansi-color-apply t))
+                                          (ansi-color-buffer))))
+        (buf-name "*CMake Compile*"))
+    (if (not (file-exists-p (concat default-directory "build")))
+        (message "CMake build directory does not exist, please run 'CMake Configure' first")
+      (progn
+        (cd (concat default-directory "build"))
+        (async-shell-command (concat "cmake --build . "
+                                     (if (eq system-type 'windows-nt) "/m" "-j8")
+                                     " && ctest") buf-name)))))
 
 (defun compile-project (target)
   (interactive "MEnter target name: ")
@@ -42,4 +45,4 @@
 (global-set-key (kbd "<f5>") 'build-and-run-project)
 (global-set-key (kbd "<f6>") 'build-and-debug-project)
 (global-set-key (kbd "<f7>") 'compile-project)
-(global-set-key (kbd "<f9>") 'my-cmake-build)
+(global-set-key (kbd "<f8>") 'my-cmake-build)
