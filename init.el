@@ -35,9 +35,9 @@
       scroll-preserve-screen-position 1)   
 ;; <===== настройки для плавного скролинга и получения последних файлов
 
-(use-package magit
-  :ensure t
-  :bind ("C-x g" . magit-status))
+;;(use-package magit
+;;  :ensure t
+;;  :bind (\"C-x g\" . magit-status))
 
 (use-package smartparens
   :config (smartparens-global-mode 1))
@@ -256,7 +256,7 @@
   (setq which-key-side-window-location 'right))
 
 ;; load tab and backtab keys for editing
-(load-user-file "helmconfig.el")
+;;(load-user-file "helmconfig.el")
 
 ;; load tab and backtab keys for editing
 (load-user-file "normaltabs.el")
@@ -282,7 +282,7 @@
  '(global-display-line-numbers-mode t)
  '(menu-bar-mode nil)
  '(package-selected-packages
-   '(projectile cmake-mode yasnippet-snippets realgud-jdb neotree which-key rtags-xref ivy-rtags ac-rtags magit smartparens company solarized-theme vertico consult use-package compat))
+   '(counsel-projectile rg company-lsp projectile cmake-mode yasnippet-snippets realgud-jdb neotree which-key rtags-xref ivy-rtags ac-rtags magit smartparens company solarized-theme vertico consult use-package compat))
  '(recentf-mode t)
  '(tab-bar-mode t)
  '(tool-bar-mode nil))

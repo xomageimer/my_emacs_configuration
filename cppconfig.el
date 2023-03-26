@@ -1,75 +1,42 @@
+;; Configure packages with use-package
+(use-package lsp-mode
+  :ensure t
+  :hook ((c++-mode cmake-mode python-mode sh-mode) . lsp-deferred)
+  :commands (lsp lsp-deferred)
+  :config (setq lsp-idle-delay 0.500))
 
-(use-package company-rtags
-:ensure t)
-(use-package flycheck-rtags
-:ensure t)
-
-;; ensure that we use only rtags checking
-;; https://github.com/Andersbakken/rtags#optional-1
-(defun setup-flycheck-rtags ()
-(interactive)
-(flycheck-select-checker 'rtags)
-;; RTags creates more accurate overlays.
-(setq-local flycheck-highlighting-mode nil)
-(setq-local flycheck-check-syntax-automatically nil))
-
-(use-package rtags
-:ensure t
-:hook (c++-mode . rtags-start-process-unless-running)
-:config
-(setq rtags-completions-enabled t
-    rtags-path "/home/ivan-egorov/.emacs.d/rtags/src/rtags.el"
-    rtags-rc-binary-name "/home/ivan-egorov/.emacs.d/rtags/bin/rc"
-    rtags-use-helm t
-    rtags-rdm-binary-name "/home/ivan-egorov/.emacs.d/rtags/bin/rdm")
-:bind (("C-c E" . rtags-find-symbol)
-    ("C-c e" . rtags-find-symbol-at-point)
-    ("C-c O" . rtags-find-references)
-    ("C-c o" . rtags-find-references-at-point)
-    ("C-c s" . rtags-find-file)
-    ("C-c v" . rtags-find-virtuals-at-point)
-    ("C-c F" . rtags-fixit)
-    ("C-c f" . rtags-location-stack-forward)
-    ("C-c b" . rtags-location-stack-back)
-    ("C-c n" . rtags-next-match)
-    ("C-c p" . rtags-previous-match)
-    ("C-c P" . rtags-preprocess-file)
-    ("C-c R" . rtags-rename-symbol)
-    ("C-c x" . rtags-show-rtags-buffer)
-    ("C-c T" . rtags-print-symbol-info)
-    ("C-c t" . rtags-symbol-type)
-    ("C-c I" . rtags-include-file)
-    ("C-c i" . rtags-get-include-file-for-symbol)))
+(use-package lsp-ui
+  :hook (lsp-mode . lsp-ui-mode)
+  :custom (lsp-ui-doc-position 'at-point))
 
 (use-package company
-:ensure t
-:config
-(global-company-mode)
-(push 'company-rtags company-backends)
-(define-key c-mode-base-map (kbd "<C-tab>") (function company-complete)))
+  :hook (prog-mode . company-mode)
+  :custom
+  (company-minimum-prefix-length 1)
+  (company-idle-delay 0.0))
 
-(use-package flycheck-rtags
-:ensure t
-:hook (c-mode-common-hook . setup-flycheck-rtags))
+(use-package company-capf
+  :after lsp-mode company
+  :custom
+  (company-lsp-async t)
+  (company-lsp-cache-candidates 'auto)
+  (company-lsp-enable-snippet t)
+  (company-lsp-enable-recompletion t)
+  :config
+  (push 'company-lsp company-backends))
 
-(setq rtags-display-result-backend 'helm)
+(use-package cmake-mode)
 
-(use-package yasnippet
-:ensure t
-:config
-(yas-global-mode 1))
+(use-package rg
+  :defer t)
 
-(defun code-compile ()
-  (interactive)
-  (unless (file-exists-p "Makefile")
-    (set (make-local-variable 'compile-command)
-     (let ((file (file-name-nondirectory buffer-file-name)))
-       (format "%s -o %s %s"
-           (if  (equal (file-name-extension file) "cpp") "g++" "gcc" )
-           (file-name-sans-extension file)
-           file)))
-    (compile compile-command)))
-
-(global-set-key [f9] 'code-compile)
-
-(global-set-key (kbd "<left-fringe> <mouse-1>") 'gdb-toggle-breakpoint)
+(use-package projectile
+  :hook (prog-mode . projectile-mode)
+  :custom
+  (projectile-completion-system 'default)
+  (projectile-enable-caching t)
+  (projectile-indexing-method 'hybrid)
+  (projectile-globally-ignored-directories '(".git" ".svn" ".hg" ".idea" ".vscode" ".eunit" "node_modules" "dist" "build" "target"))
+  (projectile-globally-ignored-file-suffixes '(".o" ".elc" ".pyc" ".class" ".min.js" ".min.css"))
+  :config
+  (projectile-mode))

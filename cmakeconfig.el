@@ -2,33 +2,19 @@
   :config
   (projectile-mode +1))
 
-(require 'cmake-ide)
-(cmake-ide-setup)
-
-(setq cmake-ide-flags-c++ (append '("-E" "tags") cmake-ide-flags-c++))
-(setq cmake-ide-flags-c (append '("-E" "tags") cmake-ide-flags-c))
-
-(add-hook 'cmake-ide-after-switch-project-hook 'my-cmake-ide-hook)
-(defun my-cmake-ide-hook ()
-  (setq-local tags-file-name (concat cmake-ide-build-dir "TAGS")))
-
-;; (use-package cmake-ide			
-  ;; :ensure t
-  ;; :config
-  ;; ;; Задайте имя исполняемого файла CMake (если необходимо)
-  ;; (setq cmake-ide-cmake-command "cmake")
-  
-  ;; ;; Задайте имя исполняемого файла make (если необходимо)
-  ;; (setq cmake-ide-make-command "make")
-  
-  ;; ;; Настройте флаги компилятора (если необходимо)
-  ;; (setq cmake-ide-flags-c++ (append '("-std=c++17")))
-  
-  ;; ;; Настройте ключи CMake (если необходимо)
-  ;; (setq cmake-ide-cmake-args (append '("-DCMAKE_BUILD_TYPE=Debug")))
-  
-  ;; ;; Задайте команду для запуска сборки
-  ;; (setq cmake-ide-build-dir (concat (file-name-as-directory (projectile-project-root)) "build")))
+(defun my-cmake-build ()
+  "Build the cmake project in the current directory."
+  (interactive)
+  (let ((project-root (projectile-project-root)))
+    (if (not project-root)
+        (error "Could not find project root directory")
+      (let* ((build-dir (concat project-root "build"))
+             (command (concat "cd " build-dir " && cmake .. && make"))
+             (compilation-buffer-name-function (lambda (major-mode-name) "*cmake-build*")))
+        (unless (file-directory-p build-dir)
+          (make-directory build-dir))
+        (setq default-directory build-dir)
+        (compile command)))))
 
 (defun compile-project (target)
   (interactive "MEnter target name: ")
@@ -56,3 +42,4 @@
 (global-set-key (kbd "<f5>") 'build-and-run-project)
 (global-set-key (kbd "<f6>") 'build-and-debug-project)
 (global-set-key (kbd "<f7>") 'compile-project)
+(global-set-key (kbd "<f9>") 'my-cmake-build)
