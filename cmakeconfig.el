@@ -2,22 +2,37 @@
   :config
   (projectile-mode +1))
 
-(defun my-cmake-build ()
-  "Compile CMake project using LSP."
+(require 'ansi-color)
+(defun my/colorize-compilation-buffer ()
+  "Colorize compilation buffer."
+  (let ((inhibit-read-only t))
+    (ansi-color-apply-on-region (point-min) (point-max))))
+
+(add-hook 'compilation-filter-hook #'my/colorize-compilation-buffer)
+
+(defun my/create-build-dir ()
+  "Create a build directory in the project root directory, or find one if it exists."
   (interactive)
-  (let ((default-directory (projectile-project-root))
-        (compilation-scroll-output t)
-        (compilation-finish-function (lambda (buf str)
-                                        (let ((ansi-color-apply t))
-                                          (ansi-color-buffer))))
-        (buf-name "*CMake Compile*"))
-    (if (not (file-exists-p (concat default-directory "build")))
-        (message "CMake build directory does not exist, please run 'CMake Configure' first")
-      (progn
-        (cd (concat default-directory "build"))
-        (async-shell-command (concat "cmake --build . "
-                                     (if (eq system-type 'windows-nt) "/m" "-j8")
-                                     " && ctest") buf-name)))))
+  (let* ((build-dirs '("build" "cmake-build" "cmake-build-debug" "cmake-build-release"))
+         (project-root (projectile-project-root))
+         (build-dir (seq-find #'file-directory-p
+                              (mapcar (lambda (dir) (concat project-root dir)) build-dirs))))
+    (if build-dir
+        (message "Build directory found: %s" build-dir)
+      (setq build-dir (concat project-root "build"))
+      (make-directory build-dir)
+      (message "Build directory created: %s" build-dir))
+    build-dir))
+
+(defun my/run-cmake ()
+  "Run CMake."
+  (interactive)
+    (let ((cmake-build-dir (my/create-build-dir)))
+    (if (file-exists-p cmake-build-dir)
+        (progn
+          (cd cmake-build-dir)
+          (compile "cmake --build ."))
+      (message "CMake build directory not found, please create one first."))))
 
 (defun compile-project (target)
   (interactive "MEnter target name: ")
@@ -45,4 +60,4 @@
 (global-set-key (kbd "<f5>") 'build-and-run-project)
 (global-set-key (kbd "<f6>") 'build-and-debug-project)
 (global-set-key (kbd "<f7>") 'compile-project)
-(global-set-key (kbd "<f8>") 'my-cmake-build)
+(global-set-key (kbd "<f8>") 'my/run-cmake)
