@@ -9,6 +9,11 @@
   :hook (lsp-mode . lsp-ui-mode)
   :custom (lsp-ui-doc-position 'at-point))
 
+(global-set-key (kbd "C-c l") 'lsp)
+(global-set-key (kbd "C-c u") 'lsp-ui-mode)
+(global-set-key (kbd "C-c r") 'lsp-ui-peek-find-references)
+(global-set-key (kbd "C-c d") 'lsp-describe-thing-at-point)
+
 (use-package company
   :hook (prog-mode . company-mode)
   :custom
@@ -40,3 +45,6 @@
   (projectile-globally-ignored-file-suffixes '(".o" ".elc" ".pyc" ".class" ".min.js" ".min.css"))
   :config
   (projectile-mode))
+
+(global-set-key (kbd "C-c s") 'counsel-projectile-rg)
+(global-set-key (kbd "C-c f") 'counsel-projectile-find-file)

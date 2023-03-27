@@ -31,7 +31,7 @@
     (if (file-exists-p cmake-build-dir)
         (progn
           (cd cmake-build-dir)
-          (compile "cmake --build ."))
+          (compile "cmake .."))
       (message "CMake build directory not found, please create one first."))))
 
 (defun compile-project (target)
@@ -57,7 +57,7 @@
     (compile compile-command)
     (gdb (concat "gdb -i=mi " (concat (projectile-project-root) "build/" target)))))
 
-(global-set-key (kbd "<f5>") 'build-and-run-project)
-(global-set-key (kbd "<f6>") 'build-and-debug-project)
-(global-set-key (kbd "<f7>") 'compile-project)
-(global-set-key (kbd "<f8>") 'my/run-cmake)
+;;(global-set-key (kbd "<f5>") 'build-and-run-project)
+;;(global-set-key (kbd "<f6>") 'build-and-debug-project)
+;;(global-set-key (kbd "<f7>") 'compile-project)
+;;(global-set-key (kbd "<f8>") 'my/run-cmake)
