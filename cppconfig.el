@@ -12,7 +12,9 @@
 (global-set-key (kbd "C-c l") 'lsp)
 (global-set-key (kbd "C-c u") 'lsp-ui-mode)
 (global-set-key (kbd "C-c r") 'lsp-ui-peek-find-references)
+(global-set-key (kbd "C-c t") 'lsp-find-references)
 (global-set-key (kbd "C-c d") 'lsp-describe-thing-at-point)
+(global-set-key (kbd "C-c e") 'lsp-treemacs-errors-list)
 
 (use-package company
   :hook (prog-mode . company-mode)
