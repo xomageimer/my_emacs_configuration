@@ -270,6 +270,9 @@
 ;; load cmake configuration
 (load-user-file "cmakeconfig.el")
 
+;; load for marco paintin
+(load-user-file "deffunctions.el")
+
 (delete-selection-mode 1)   ; включаем режим удаления выделенного текста
 (setq yank-undo-function 'yank-unbounded)   ; настраиваем замену выделенного текста при вставке
 
@@ -287,7 +290,7 @@
  '(global-display-line-numbers-mode t)
  '(menu-bar-mode nil)
  '(package-selected-packages
-   '(dap-mode fzf ag unicode-fonts default-font-presets counsel-projectile rg company-lsp projectile cmake-mode yasnippet-snippets realgud-jdb neotree which-key rtags-xref ivy-rtags ac-rtags magit smartparens company solarized-theme vertico consult use-package compat))
+   '(cl-lib cpputils-cmake clang-format edebug-x dap-mode fzf ag unicode-fonts default-font-presets counsel-projectile rg company-lsp projectile cmake-mode yasnippet-snippets realgud-jdb neotree which-key rtags-xref ivy-rtags ac-rtags magit smartparens company solarized-theme vertico consult use-package compat))
  '(recentf-mode t)
  '(tab-bar-mode t)
  '(tool-bar-mode nil))
