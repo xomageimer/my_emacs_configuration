@@ -50,3 +50,13 @@
 
 (global-set-key (kbd "C-c s") 'counsel-projectile-rg)
 (global-set-key (kbd "C-c f") 'counsel-projectile-find-file)
+
+(use-package clang-format
+  :ensure t
+  :bind (:map c++-mode-map
+         ("C-c i" . clang-format-region)
+         ("C-c u" . clang-format-buffer))
+  :config (setq clang-format-style "Google"))
+
+
+

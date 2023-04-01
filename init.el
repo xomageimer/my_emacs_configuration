@@ -276,7 +276,7 @@
 (delete-selection-mode 1)   ; включаем режим удаления выделенного текста
 (setq yank-undo-function 'yank-unbounded)   ; настраиваем замену выделенного текста при вставке
 
-(set-face-attribute 'default nil :font "Monospace" :height 115)
+(set-face-attribute 'default nil :font "JetBrains Mono 12" :height 115)
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -290,7 +290,7 @@
  '(global-display-line-numbers-mode t)
  '(menu-bar-mode nil)
  '(package-selected-packages
-   '(cl-lib cpputils-cmake clang-format edebug-x dap-mode fzf ag unicode-fonts default-font-presets counsel-projectile rg company-lsp projectile cmake-mode yasnippet-snippets realgud-jdb neotree which-key rtags-xref ivy-rtags ac-rtags magit smartparens company solarized-theme vertico consult use-package compat))
+   '(clang-format+ google-c-style cl-lib cpputils-cmake clang-format edebug-x dap-mode fzf ag unicode-fonts default-font-presets counsel-projectile rg company-lsp projectile cmake-mode yasnippet-snippets realgud-jdb neotree which-key rtags-xref ivy-rtags ac-rtags magit smartparens company solarized-theme vertico consult use-package compat))
  '(recentf-mode t)
  '(tab-bar-mode t)
  '(tool-bar-mode nil))

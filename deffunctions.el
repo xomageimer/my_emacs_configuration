@@ -123,17 +123,15 @@
 
 ;;(global-set-key (kbd "M-t") 'insert-cmake-code)
 
-
 (defun my-expand-macro ()
   "Expand macro using lsp-execute-code-action and copy result to a read-only buffer on the right window."
   (interactive)
   (let* ((result-buffer (generate-new-buffer "*Macro Expansion*"))
          (params (lsp--text-document-position-params))
          (current-uri (buffer-file-name))
-         (action (make-instance 'lsp:CodeAction :title "Expand macro" :kind lsp:CodeActionKind-QuickFix :command (make-instance 'lsp:Command :title "Expand macro" :command "source.organizeImports" :arguments '()))))
+         (actions (lsp--send-request (lsp--make-request "textDocument/codeAction" (lsp--make-code-action-params params)))))
     (with-current-buffer result-buffer
       (read-only-mode)
-      (insert (lsp-execute-code-action action params current-uri))
+      (insert (mapconcat (lambda (a) (lsp--code-action-title a)) actions "\n"))
       (goto-char (point-min)))
     (display-buffer result-buffer '((display-buffer-in-side-window)))))
-
