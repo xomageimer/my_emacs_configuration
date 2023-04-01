@@ -1,3 +1,9 @@
+;;; размеры окна по умолчанию
+(add-to-list 'default-frame-alist '(fullscreen . maximized))
+
+(global-set-key (kbd "C-c b") 'beginning-of-buffer)
+(global-set-key (kbd "C-c n") 'end-of-buffer)
+
 ;;; Указываем откуда брать части настроек.
 (defconst user-init-dir
   (cond ((boundp 'user-emacs-directory) user-emacs-directory)
@@ -276,7 +282,7 @@
 (delete-selection-mode 1)   ; включаем режим удаления выделенного текста
 (setq yank-undo-function 'yank-unbounded)   ; настраиваем замену выделенного текста при вставке
 
-(set-face-attribute 'default nil :font "JetBrains Mono 12" :height 115)
+(set-face-attribute 'default nil :font "JetBrains Mono 12" :height 107)
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.

@@ -5,6 +5,8 @@
   :commands (lsp lsp-deferred)
   :config (setq lsp-idle-delay 0.500))
 
+;;(setq lsp-enable-semantic-highlighting t)
+
 (use-package lsp-ui
   :hook (lsp-mode . lsp-ui-mode)
   :custom (lsp-ui-doc-position 'at-point))
@@ -57,6 +59,3 @@
          ("C-c i" . clang-format-region)
          ("C-c u" . clang-format-buffer))
   :config (setq clang-format-style "Google"))
-
-
-
