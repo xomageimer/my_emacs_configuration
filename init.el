@@ -82,18 +82,6 @@
 (global-set-key (kbd "<f9>") 'toggle-neotree-and-find)
 ;;; <=== Neotree
 
-;;; ====> Пакет company в Emacs - это автодополнитель, который помогает вам быстрее писать код, предоставляя предложения для завершения кода, основанные на том, что вы уже написали.
-(use-package company
-  :ensure t
-  :init (global-company-mode)
-  :bind (:map company-active-map
-	  ("<tab>" . company-select-next)
-          ("<backtab>" . company-select-previous))
-  :custom
-  (company-minimum-prefix-length 1)
-  (compant-idle-delay 0.01))
-;;; <==== company
-
 ;;; ====> Пакет flycheck в Emacs - это плагин для автоматической проверки синтаксиса вашего кода на наличие ошибок.
 (use-package flycheck
   :ensure t
