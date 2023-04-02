@@ -1,5 +1,3 @@
-(load-user-file "cmakeflags.el")
-
 (use-package projectile
   :config
   (projectile-mode +1))
@@ -26,10 +24,21 @@
       (message "Build directory created: %s" build-dir))
     build-dir))
 
+(defun my-read-cmake-flags ()
+  "Read CMake flags from cmakeflags.in file in the current project."
+  (let ((cmakeflags-file (expand-file-name "cmakeflags.in" (projectile-project-root)))
+        (cmakeflags '()))
+    (when (file-exists-p cmakeflags-file)
+      (with-temp-buffer
+        (insert-file-contents cmakeflags-file)
+        (setq cmakeflags (split-string (buffer-string) nil t))))
+    cmakeflags))
+
 (defun my/run-cmake ()
   "Run CMake."
   (interactive)
-    (let ((cmake-build-dir (my/create-build-dir)))
+      (let ((cmake-build-dir (my/create-build-dir))
+	   (cmake-flags (my-read-cmake-flags)))
     (if (file-exists-p cmake-build-dir)
         (progn
           (cd cmake-build-dir)
