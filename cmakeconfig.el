@@ -31,7 +31,7 @@
     (if (file-exists-p cmake-build-dir)
         (progn
           (cd cmake-build-dir)
-          (compile "cmake .."))
+          (compile "cmake .. -DCMAKE_C_COMPILER=/usr/bin/clang -DCMAKE_CXX_COMPILER=/usr/bin/clang++"))
       (message "CMake build directory not found, please create one first."))))
 
 (defun compile-project (target)
@@ -60,4 +60,4 @@
 ;;(global-set-key (kbd "<f5>") 'build-and-run-project)
 ;;(global-set-key (kbd "<f6>") 'build-and-debug-project)
 ;;(global-set-key (kbd "<f7>") 'compile-project)
-;;(global-set-key (kbd "<f8>") 'my/run-cmake)
+(global-set-key (kbd "<f8>") 'my/run-cmake)
