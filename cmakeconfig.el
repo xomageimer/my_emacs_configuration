@@ -25,20 +25,24 @@
     build-dir))
 
 (defun my-read-cmake-flags ()
-  "Read CMake flags from cmakeflags.in file in the current project."
-  (let ((cmakeflags-file (expand-file-name "cmakeflags.in" (projectile-project-root)))
-        (cmakeflags '()))
-    (when (file-exists-p cmakeflags-file)
-      (with-temp-buffer
-        (insert-file-contents cmakeflags-file)
-        (setq cmakeflags (split-string (buffer-string) nil t))))
-    cmakeflags))
+  "Read CMake flags from cmakeflags.in or return default flags."
+  (let* ((cmakeflags-path (projectile-expand-root "cmakeflags.in"))
+         (default-flags '("-DCMAKE_BUILD_TYPE=Debug"
+                          "-DCMAKE_C_COMPILER=/usr/bin/clang"
+                          "-DCMAKE_CXX_COMPILER=/usr/bin/clang++")))
+    (if (file-exists-p cmakeflags-path)
+        (with-temp-buffer
+          (insert-file-contents cmakeflags-path)
+          (mapcar (lambda (flag)
+                    (replace-regexp-in-string "\\s-+" "" flag))
+                  (split-string (buffer-string) "\n" t)))
+      default-flags)))
 
 (defun my/run-cmake ()
   "Run CMake."
   (interactive)
       (let ((cmake-build-dir (my/create-build-dir))
-	   (cmake-flags (my-read-cmake-flags)))
+	    (cmake-flags (my-read-cmake-flags)))
     (if (file-exists-p cmake-build-dir)
         (progn
           (cd cmake-build-dir)
