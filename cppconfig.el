@@ -11,6 +11,12 @@
   :hook (lsp-mode . lsp-ui-mode)
   :custom (lsp-ui-doc-position 'at-point))
 
+(setq lsp-ui-doc-glance-mode t)
+(setq lsp-enable-macro-expansion t)
+(setq lsp-ui-peek-always-show t)
+(setq lsp-ui-sidline-show-hover t)
+(setq lsp-ui-sideline-show-code-actions t)
+
 (global-set-key (kbd "C-c l") 'lsp)
 (global-set-key (kbd "C-c u") 'lsp-ui-mode)
 (global-set-key (kbd "C-c r") 'lsp-ui-peek-find-references)

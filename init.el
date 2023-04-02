@@ -4,6 +4,9 @@
 (global-set-key (kbd "C-c b") 'beginning-of-buffer)
 (global-set-key (kbd "C-c n") 'end-of-buffer)
 
+;; восстанавливать последнее состояние буфера
+(desktop-save-mode 1)
+
 ;;; Указываем откуда брать части настроек.
 (defconst user-init-dir
   (cond ((boundp 'user-emacs-directory) user-emacs-directory)
@@ -15,8 +18,6 @@
   (interactive "f")
   "Load a file in current user's configuration directory"
   (load-file (expand-file-name file user-init-dir)))
-
-(load-user-file "deffunctions.el")
 
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
@@ -277,7 +278,7 @@
 (load-user-file "cmakeconfig.el")
 
 ;; load for marco paintin
-(load-user-file "deffunctions.el")
+;;(load-user-file "deffunctions.el")
 
 (delete-selection-mode 1)   ; включаем режим удаления выделенного текста
 (setq yank-undo-function 'yank-unbounded)   ; настраиваем замену выделенного текста при вставке
