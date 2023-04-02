@@ -47,11 +47,11 @@
 ;;; <===== настройки для плавного скролинга и получения последних файлов
 
 ;;; ====> пакет для работы с git // TODO: вынести в отдельный конфиг
-;; (use-package magit
-;;   :ensure t)
-;; (global-set-key (kbd "C-c g s") 'magit-status)
-;; (global-set-key (kbd "C-c g l") 'magit-log)
-;; (global-set-key (kbd "C-c g d") 'magit-diff)
+(use-package magit
+  :ensure t)
+(global-set-key (kbd "C-c g s") 'magit-status)
+(global-set-key (kbd "C-c g l") 'magit-log)
+(global-set-key (kbd "C-c g d") 'magit-diff)    
 ;;; <==== magit
 
 ;;; ====> пакет для работы с парными символами, упрощает работу с ними
