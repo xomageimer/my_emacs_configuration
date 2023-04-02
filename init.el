@@ -1,12 +1,14 @@
 ;;; размеры окна по умолчанию
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
 
+;;; хоткеи для перехода в конец и начало буфера
 (global-set-key (kbd "C-c b") 'beginning-of-buffer)
 (global-set-key (kbd "C-c n") 'end-of-buffer)
 
-;; восстанавливать последнее состояние буфера
+;;; восстанавливать последнее состояние буфера
 (desktop-save-mode 1)
 
+;;; ====> функции для подключения других el конфигов
 ;;; Указываем откуда брать части настроек.
 (defconst user-init-dir
   (cond ((boundp 'user-emacs-directory) user-emacs-directory)
@@ -18,7 +20,9 @@
   (interactive "f")
   "Load a file in current user's configuration directory"
   (load-file (expand-file-name file user-init-dir)))
+;;; <====  функции для подключения других el конфигураций
 
+;;; подключение melpa репозитория
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 ;; Comment/uncomment this line to enable MELPA Stable if desired.  See `package-archive-priorities`
@@ -33,30 +37,52 @@
   (package-install 'use-package))
   (message "EMACS install use-package.el")
 
-;; =====> настройки для плавного скролинга и получения последних файлов
+;;; =====> настройки для плавного скролинга и получения последних файлов
 (global-set-key "\C-x\ \C-g" 'recentf-open-files)
 (setq redisplay-dont-pause t
       scroll-margin 5
       scroll-step 1
       scroll-conservatively 1000
       scroll-preserve-screen-position 1)   
-;; <===== настройки для плавного скролинга и получения последних файлов
+;;; <===== настройки для плавного скролинга и получения последних файлов
 
-;;(use-package magit
-;;  :ensure t
-;;  :bind (\"C-x g\" . magit-status))
+;;; ====> пакет для работы с git // TODO: вынести в отдельный конфиг
+;; (use-package magit
+;;   :ensure t)
+;; (global-set-key (kbd "C-c g s") 'magit-status)
+;; (global-set-key (kbd "C-c g l") 'magit-log)
+;; (global-set-key (kbd "C-c g d") 'magit-diff)
+;;; <==== magit
 
+;;; ====> пакет для работы с парными символами, упрощает работу с ними
 (use-package smartparens
   :config (smartparens-global-mode 1))
+;;; <==== smartparens
 
+;;; ====> Пакет Ansi-color в Emacs предназначен для работы с текстом, содержащим ANSI-цветовые коды. 
 (use-package ansi-color
   :ensure t)
+;;; <==== Ansi-color. 
 
+;;; ====> Пакет Neotree в Emacs предназначен для работы с файловой системой и навигации по файлам и директория
 (use-package neotree
-  :bind ([f9] . neotree-toggle)
+  :ensure t
   :init (setq neo-window-width 35)
   :config (setq neo-smart-open nil))
 
+;;; функция чтобы открывать toggle'ить текущую директорию
+(defun toggle-neotree-and-find ()
+  "Toggle the NeoTree window and find the current file."
+  (interactive)
+  (if (neo-global--window-exists-p)
+      (neotree-hide)
+    (progn
+      (neotree-find)
+      (neotree-show))))
+(global-set-key (kbd "<f9>") 'toggle-neotree-and-find)
+;;; <=== Neotree
+
+;;; ====> Пакет company в Emacs - это автодополнитель, который помогает вам быстрее писать код, предоставляя предложения для завершения кода, основанные на том, что вы уже написали.
 (use-package company
   :ensure t
   :init (global-company-mode)
@@ -66,13 +92,15 @@
   :custom
   (company-minimum-prefix-length 1)
   (compant-idle-delay 0.01))
+;;; <==== company
 
+;;; ====> Пакет flycheck в Emacs - это плагин для автоматической проверки синтаксиса вашего кода на наличие ошибок.
 (use-package flycheck
   :ensure t
   :init (global-flycheck-mode))
+;;; <==== flycheck
 
-;; ==========> Consult
-;; Example configuration for Consult
+;; ==========> Пакет Consult - это набор инструментов для Emacs, который предоставляет расширенный поиск файлов, буферов, команд и многого другого.
 (use-package consult
   :ensure t
   ;; Replace bindings. Lazily loaded due by `use-package'.
@@ -193,8 +221,7 @@
   )
 ;; <============ Consult
 
-;; ============> Vertico
-;; Enable vertico
+;; ============> Пакет Vertico - это расширение для Emacs, которое предоставляет расширенную функциональность для работы с минибуфером.
 (use-package vertico
   :ensure t
   :init
@@ -213,11 +240,12 @@
   ;; (setq vertico-cycle t)
   )
 
-;; Persist history over Emacs restarts. Vertico sorts by history position.
+;; ====> Пакет savehist - это расширение для Emacs, которое сохраняет историю выполненных команд и ввода в Emacs между сеансами работы.
 (use-package savehist
   :ensure t
   :init
   (savehist-mode))
+;; <==== savehist
 
 ;; A few more useful configurations...
 (use-package emacs
@@ -259,11 +287,13 @@
         completion-category-overrides '((file (styles partial-completion)))))
 ;; <================ Vertico
 
+;;; ====> Пакет which-key - это расширение для Emacs, которое помогает пользователям отслеживать и запоминать горячие клавиши и команды, доступные в Emacs
 (use-package which-key
   :ensure t
   :config
   (which-key-mode)
   (setq which-key-side-window-location 'right))
+;;; <==== which-key
 
 ;; load tab and backtab keys for editing
 ;;(load-user-file "helmconfig.el")
@@ -283,6 +313,7 @@
 (delete-selection-mode 1)   ; включаем режим удаления выделенного текста
 (setq yank-undo-function 'yank-unbounded)   ; настраиваем замену выделенного текста при вставке
 
+;;; устанавливаем шрифт
 (set-face-attribute 'default nil :font "JetBrains Mono 12" :height 107)
 
 (custom-set-variables
