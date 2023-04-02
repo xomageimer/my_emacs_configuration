@@ -1,3 +1,9 @@
+(add-to-list 'exec-path "~/.local/bin")
+(require 'lsp-mode)
+(setq lsp-cmake-server-path "/snap/bin/cmake-server")
+(add-to-list 'lsp-language-id-configuration '(cmake-mode . "cmake"))
+(add-hook 'cmake-mode-hook #'lsp-deferred)
+
 (use-package projectile
   :config
   (projectile-mode +1))
@@ -49,6 +55,28 @@
           (compile (concat "cmake .. " (mapconcat 'identity cmake-flags " "))))
       (message "CMake build directory not found, please create one first."))))
 
+(defun my/get-all-cmake-targets ()
+  "Get all cmake targets from all CMakeLists.txt files in the current project."
+  (interactive)
+  (let* ((project-root (projectile-project-root))
+         (cmake-files (seq-filter (lambda (f) (string-match-p "CMakeLists\\.txt$" f))
+                                  (directory-files-recursively project-root "CMakeLists.txt")))
+         (all-targets '()))
+    (dolist (file cmake-files)
+      (with-temp-buffer
+        (insert-file-contents file)
+        (goto-char (point-min))
+        (while (re-search-forward "^ *add_executable(\\|add_library(" nil t)
+          (let* ((line (thing-at-point 'line t))
+                 (target (string-match "\\(add_executable\\|add_library\\|add_custom_target\\)(\\([^ ]+\\)" line)))
+            (when target
+              (push (match-string-no-properties 2 line) all-targets))))))
+    (when all-targets
+      (let ((target (completing-read "Select target: " all-targets)))
+        (if (string-empty-p target)
+            (message "No target selected.")
+          (message "Selected target: %s" target))))))
+
 (defun compile-project (target)
   (interactive "MEnter target name: ")
   (cmake-ide-run-cmake)
@@ -74,5 +102,5 @@
 
 ;;(global-set-key (kbd "<f5>") 'build-and-run-project)
 ;;(global-set-key (kbd "<f6>") 'build-and-debug-project)
-;;(global-set-key (kbd "<f7>") 'compile-project)
+(global-set-key (kbd "<f7>") 'compile-project)
 (global-set-key (kbd "<f8>") 'my/run-cmake)

@@ -1,7 +1,6 @@
-;; Configure packages with use-package
 (use-package lsp-mode
   :ensure t
-  :hook ((c++-mode cmake-mode python-mode sh-mode) . lsp-deferred)
+  :hook ((c++-mode python-mode sh-mode) . lsp-deferred)
   :commands (lsp lsp-deferred)
   :config (setq lsp-idle-delay 0.500))
 
@@ -46,8 +45,6 @@
   (company-lsp-enable-recompletion t)
   :config
   (push 'company-lsp company-backends))
-
-(use-package cmake-mode)
 
 (use-package rg
   :defer t)
