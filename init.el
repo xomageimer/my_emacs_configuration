@@ -347,7 +347,7 @@
   (interactive)
   (shrink-window 5))
 
-(global-set-key (kbd "C-c C-q") 'my-enlarge-window-horizontally)
-(global-set-key (kbd "C-c C-w") 'my-shrink-window-horizontally)
-(global-set-key (kbd "C-c C-a") 'my-enlarge-window)
-(global-set-key (kbd "C-c C-z") 'my-shrink-window)
+(global-set-key (kbd "M-[") 'my-enlarge-window-horizontally)
+(global-set-key (kbd "M-]") 'my-shrink-window-horizontally)
+(global-set-key (kbd "M-o") 'my-enlarge-window)
+(global-set-key (kbd "M-p") 'my-shrink-window)
