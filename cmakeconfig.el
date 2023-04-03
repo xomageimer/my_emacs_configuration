@@ -55,27 +55,38 @@
           (compile (concat "cmake .. " (mapconcat 'identity cmake-flags " "))))
       (message "CMake build directory not found, please create one first."))))
 
-(defun my/get-all-cmake-targets ()
-  "Get all cmake targets from all CMakeLists.txt files in the current project."
+(defun my-cmake-targets ()
+  "Return a list of targets from `cmake --build <build-dir> --target help',
+  excluding targets with extensions and trimming targets with colon."
+  (let* ((build-dir (my/create-build-dir))
+         (default-directory build-dir)
+         (buffer-name "*compilation*"))
+    ;; Запускаем команду `cmake --build <build-dir> --target help`
+    (compile (concat "cmake --build " build-dir " --target help") t)
+    ;; Ждем, пока процесс завершится и результат будет выведен в буфер
+    (while (process-live-p (get-buffer-process buffer-name))
+      (accept-process-output nil 0.1))
+    ;; Обрабатываем результат
+    (with-current-buffer buffer-name
+      (goto-char (point-min))
+      (let ((targets '()))
+        (while (not (eobp))
+          (let ((line (buffer-substring-no-properties
+                       (line-beginning-position)
+                       (line-end-position))))
+            (when (and (not (string-match "\\..*$" line))
+                       (not (string-match ":.*$" line)))
+              (push line targets)))
+          (forward-line))
+        (nreverse targets)))))
+
+(defun my-cmake-build-target ()
+  "Prompt the user to choose a target from `cmake --build <build-dir> --target help',
+  and then build the chosen target."
   (interactive)
-  (let* ((project-root (projectile-project-root))
-         (cmake-files (seq-filter (lambda (f) (string-match-p "CMakeLists\\.txt$" f))
-                                  (directory-files-recursively project-root "CMakeLists.txt")))
-         (all-targets '()))
-    (dolist (file cmake-files)
-      (with-temp-buffer
-        (insert-file-contents file)
-        (goto-char (point-min))
-        (while (re-search-forward "^ *add_executable(\\|add_library(" nil t)
-          (let* ((line (thing-at-point 'line t))
-                 (target (string-match "\\(add_executable\\|add_library\\|add_custom_target\\)(\\([^ ]+\\)" line)))
-            (when target
-              (push (match-string-no-properties 2 line) all-targets))))))
-    (when all-targets
-      (let ((target (completing-read "Select target: " all-targets)))
-        (if (string-empty-p target)
-            (message "No target selected.")
-          (message "Selected target: %s" target))))))
+  (let* ((targets (my-cmake-targets))
+         (target (completing-read "Build target: " targets)))
+    (compile (concat "cmake --build " (my/create-build-dir) " --target " target) t)))
 
 (defun compile-project (target)
   (interactive "MEnter target name: ")

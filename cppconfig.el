@@ -69,3 +69,26 @@
          ("C-c i" . clang-format-region)
          ("C-c u" . clang-format-buffer))
   :config (setq clang-format-style "Google"))
+
+;; (defun my-find-tag-in-new-window ()
+;;   "Find the tag at point and display the results in a new window."
+;;   (interactive)
+;;   (let ((tag (find-tag-default)))
+;;     (split-window-right)
+;;     (find-tag tag)))
+
+;; (global-set-key (kbd "C-c w") 'my-find-tag-in-new-window)
+;; (set-register ?. (point-marker))
+
+;; (defun my-pop-tag-mark ()
+;;   "Return to where find-tag-in-new-window was last invoked and close the search window."
+;;   (interactive)
+;;   (let ((marker (get-register ?.)))
+;;     (when marker
+;;       (switch-to-buffer (marker-buffer marker))
+;;       (goto-char (marker-position marker))
+;;       (delete-window (selected-window))
+;;       (pop-to-buffer (marker-buffer marker) t)
+;;       (set-register ?. nil))))
+
+;; (global-set-key (kbd "C-c q") 'my-pop-tag-mark)

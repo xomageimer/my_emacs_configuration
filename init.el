@@ -1,6 +1,3 @@
-;;; размеры окна по умолчанию
-(add-to-list 'default-frame-alist '(fullscreen . maximized))
-
 ;;; хоткеи для перехода в конец и начало буфера
 (global-set-key (kbd "C-c b") 'beginning-of-buffer)
 (global-set-key (kbd "C-c n") 'end-of-buffer)
@@ -326,3 +323,31 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
+
+;;; размеры окна по умолчанию
+(add-to-list 'default-frame-alist '(fullscreen . maximized))
+
+(defun my-enlarge-window-horizontally ()
+  "Enlarge the window horizontally by 5 columns."
+  (interactive)
+  (enlarge-window-horizontally 5))
+
+(defun my-shrink-window-horizontally ()
+  "Enlarge the window horizontally by 5 columns."
+  (interactive)
+  (shrink-window-horizontally 5))
+
+(defun my-enlarge-window ()
+  "Enlarge the window horizontally by 5 columns."
+  (interactive)
+  (enlarge-window 5))
+
+(defun my-shrink-window ()
+  "Enlarge the window horizontally by 5 columns."
+  (interactive)
+  (shrink-window 5))
+
+(global-set-key (kbd "C-c C-q") 'my-enlarge-window-horizontally)
+(global-set-key (kbd "C-c C-w") 'my-shrink-window-horizontally)
+(global-set-key (kbd "C-c C-a") 'my-enlarge-window)
+(global-set-key (kbd "C-c C-z") 'my-shrink-window)
