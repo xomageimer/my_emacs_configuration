@@ -10,6 +10,8 @@
   :hook (lsp-mode . lsp-ui-mode)
   :custom (lsp-ui-doc-position 'at-point))
 
+(setq lsp-ui-sideline-enable t)
+(setq lsp-ui-sideline-show-diagnostics t)
 (setq lsp-ui-doc-glance-mode t)
 (setq lsp-enable-macro-expansion t)
 (setq lsp-ui-peek-always-show t)
@@ -70,6 +72,9 @@
          ("C-c u" . clang-format-buffer))
   :config (setq clang-format-style "Google"))
 
+(use-package realgud
+  :ensure t)
+
 ;; (defun my-find-tag-in-new-window ()
 ;;   "Find the tag at point and display the results in a new window."
 ;;   (interactive)
@@ -79,7 +84,6 @@
 
 ;; (global-set-key (kbd "C-c w") 'my-find-tag-in-new-window)
 ;; (set-register ?. (point-marker))
-
 ;; (defun my-pop-tag-mark ()
 ;;   "Return to where find-tag-in-new-window was last invoked and close the search window."
 ;;   (interactive)

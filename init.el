@@ -352,3 +352,6 @@
 (global-set-key (kbd "M-]") 'my-shrink-window-horizontally)
 (global-set-key (kbd "M-o") 'my-enlarge-window)
 (global-set-key (kbd "M-p") 'my-shrink-window)
+
+(global-set-key (kbd "C-x t <left>") 'tab-bar-move-tab-backward)
+(global-set-key (kbd "C-x t <right>") 'tab-bar-move-tab)
