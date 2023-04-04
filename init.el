@@ -48,7 +48,8 @@
   :ensure t)
 (global-set-key (kbd "C-c g s") 'magit-status)
 (global-set-key (kbd "C-c g l") 'magit-log)
-(global-set-key (kbd "C-c g d") 'magit-diff)    
+(global-set-key (kbd "C-c g d") 'magit-diff)
+(global-set-key (kbd "C-c g b") 'magit-blame)
 ;;; <==== magit
 
 ;;; ====> пакет для работы с парными символами, упрощает работу с ними
