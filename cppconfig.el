@@ -70,10 +70,20 @@
   :bind (:map c++-mode-map
          ("C-c i" . clang-format-region)
          ("C-c u" . clang-format-buffer))
-  :config (setq clang-format-style "Google"))
+  :config ((setq clang-format-style "{BasedOnStyle: google, IndentWidth: 4, TabWidth: 4}")))
 
 (use-package realgud
   :ensure t)
+
+(c-add-style "microsoft"
+          '("stroustrup"
+            (c-offsets-alist
+             (innamespace . -)
+             (inline-open . 0)
+             (inher-cont . c-lineup-multi-inher)
+             (arglist-cont-nonempty . +)
+             (template-args-cont . +))))
+(setq c-default-style "microsoft")
 
 ;; (defun my-find-tag-in-new-window ()
 ;;   "Find the tag at point and display the results in a new window."
