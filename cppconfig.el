@@ -18,6 +18,9 @@
 (setq lsp-ui-sidline-show-hover t)
 (setq lsp-ui-sideline-show-code-actions t)
 
+(add-hook 'lsp-mode-hook (lambda ()
+   (setq-local lsp-xref-keep-region-history t)))
+
 (global-set-key (kbd "C-c l") 'lsp)
 (global-set-key (kbd "C-c u") 'lsp-ui-mode)
 (global-set-key (kbd "C-c r") 'lsp-ui-peek-find-references)
@@ -69,21 +72,14 @@
   :ensure t
   :bind (:map c++-mode-map
          ("C-c i" . clang-format-region)
-         ("C-c u" . clang-format-buffer))
-  :config ((setq clang-format-style "{BasedOnStyle: google, IndentWidth: 4, TabWidth: 4}")))
+         ("C-c u" . clang-format-buffer)))
 
 (use-package realgud
   :ensure t)
 
-(c-add-style "microsoft"
-          '("stroustrup"
-            (c-offsets-alist
-             (innamespace . -)
-             (inline-open . 0)
-             (inher-cont . c-lineup-multi-inher)
-             (arglist-cont-nonempty . +)
-             (template-args-cont . +))))
-(setq c-default-style "microsoft")
+(setq-default indent-tabs-mode nil)
+(setq-default tab-width 4)                ; tabs four spaces wide
+(defvaralias 'c-basic-offset 'tab-width)  ; Set the C/C++/Java.. mode to use this tab width
 
 ;; (defun my-find-tag-in-new-window ()
 ;;   "Find the tag at point and display the results in a new window."
@@ -105,4 +101,4 @@
 ;;       (pop-to-buffer (marker-buffer marker) t)
 ;;       (set-register ?. nil))))
 
-;; (global-set-key (kbd "C-c q") 'my-pop-tag-mark)
+(global-set-key (kbd "C-c c a") 'lsp-ui-sideline-apply-code-actions)
