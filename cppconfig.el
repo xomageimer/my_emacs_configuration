@@ -77,6 +77,21 @@
 (use-package realgud
   :ensure t)
 
+;; (setq-default mode-line-format
+;;     (list
+;;     ;; здесь настройки для отображения строки состояния
+;;     '(:eval (propertize "%b " 'face 'font-lock-keyword-face)) ;; здесь происходит отображение имени буфера
+;;     '(:eval (propertize (buffer-file-name) 'face 'font-lock-variable-name-face))
+;;     ))
+
+;; (defun my/lsp-headerline-breadcrumb-segments ()
+;;   "Return the breadcrumb segments for the currently selected window."
+;;   (let ((buffer (window-buffer (selected-window))))
+;;     (with-current-buffer buffer
+;;       (list 'file-name))))
+
+;; (setq lsp-headerline-breadcrumb-segments 'my/lsp-headerline-breadcrumb-segments)
+
 (setq-default indent-tabs-mode nil)
 (setq-default tab-width 4)                ; tabs four spaces wide
 (defvaralias 'c-basic-offset 'tab-width)  ; Set the C/C++/Java.. mode to use this tab width

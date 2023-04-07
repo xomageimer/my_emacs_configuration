@@ -135,3 +135,12 @@
       (insert (mapconcat (lambda (a) (lsp--code-action-title a)) actions "\n"))
       (goto-char (point-min)))
     (display-buffer result-buffer '((display-buffer-in-side-window)))))
+
+
+(defun create-cmake-query (build-dir query)
+  "Create a cmake query for cmake api"
+  (let* ((cmake-dir (concat (file-name-as-directory build-dir) ".cmake/api/v1"))
+         (filepath (concat (file-name-as-directory cmake-dir) query)))
+    (make-directory cmake-dir t)
+    (write-region "" nil filepath)
+    (message "File created: %s" filepath)))

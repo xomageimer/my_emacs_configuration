@@ -294,7 +294,7 @@
 (load-user-file "cmakeconfig.el")
 
 ;; load for marco paintin
-;;(load-user-file "deffunctions.el")
+(load-user-file "deffunctions.el")
 
 (delete-selection-mode 1)   ; включаем режим удаления выделенного текста
 (setq yank-undo-function 'yank-unbounded)   ; настраиваем замену выделенного текста при вставке

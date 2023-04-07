@@ -35,7 +35,8 @@
   (let* ((cmakeflags-path (projectile-expand-root "cmakeflags.in"))
          (default-flags '("-DCMAKE_BUILD_TYPE=Debug"
                           "-DCMAKE_C_COMPILER=/usr/bin/clang"
-                          "-DCMAKE_CXX_COMPILER=/usr/bin/clang++")))
+                          "-DCMAKE_CXX_COMPILER=/usr/bin/clang++"
+                          "-DCMAKE_EXPORT_COMPILE_COMMANDS=1")))
     (if (file-exists-p cmakeflags-path)
         (with-temp-buffer
           (insert-file-contents cmakeflags-path)
@@ -44,6 +45,14 @@
                   (split-string (buffer-string) "\n" t)))
       default-flags)))
 
+(defun create-cmake-query (build-dir query)
+  "Create a cmake query for cmake api"
+  (let* ((cmake-dir (concat (file-name-as-directory build-dir) ".cmake/api/v1/query"))
+         (filepath (concat (file-name-as-directory cmake-dir) query)))
+    (make-directory cmake-dir t)
+    (write-region "" nil filepath)
+    (message "File created: %s" filepath)))
+
 (defun my/run-cmake ()
   "Run CMake."
   (interactive)
@@ -51,6 +60,7 @@
 	    (cmake-flags (my-read-cmake-flags)))
     (if (file-exists-p cmake-build-dir)
         (progn
+          (create-cmake-query cmake-build-dir "codemodel-v2")
           (cd cmake-build-dir)
           (compile (concat "cmake .. " (mapconcat 'identity cmake-flags " "))))
       (message "CMake build directory not found, please create one first."))))
