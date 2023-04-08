@@ -144,3 +144,30 @@
     (make-directory cmake-dir t)
     (write-region "" nil filepath)
     (message "File created: %s" filepath)))
+
+(require 'json)
+
+(defun parse-json-files-in-directory (directory)
+  "Parse all JSON files in DIRECTORY that start with the word 'target'."
+  (interactive "DChoose directory: ")
+  (let ((name-path-map (make-hash-table :test 'equal)))
+    (dolist (file (directory-files-recursively directory "^target.*\\.json$"))
+      (with-temp-buffer
+        (insert-file-contents file)
+        (let ((json-object-type 'hash-table))
+          (let* ((json (json-read))
+                 (name (gethash "name" json))
+                 (path-vector (mapcar (lambda (source) (gethash "path" source))
+                                      (gethash "sources" json))))
+            (puthash name path-vector name-path-map)))))
+    name-path-map))
+
+(defun show-name-path-map ()
+  "Show the result of `parse-json-files-in-directory' in a new buffer."
+  (interactive)
+  (let ((name-path-map (parse-json-files-in-directory "~/main/cmake-build-debug/.cmake/api/v1/reply")))
+    (with-output-to-temp-buffer "*Name-Path Map*"
+      (princ "Name-Path Map:\n")
+      (maphash (lambda (key value)
+                 (princ (format "%s: %S\n" key value)))
+               name-path-map))))
