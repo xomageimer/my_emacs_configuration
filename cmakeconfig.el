@@ -109,7 +109,7 @@
   "Prompt the user to choose a target from `cmake --build <build-dir> --target help',
   and then build the chosen target."
   (interactive)
-  (print-all-target-names targets)
+;;  (print-all-target-names targets)
   (let* ((allTargets targets)
          (target (completing-read (concat "Build target (" (mapconcat 'identity allTargets " ") "): ") allTargets)))
     (compile (concat "cmake --build " (my/create-build-dir) " --target " target) t)))
