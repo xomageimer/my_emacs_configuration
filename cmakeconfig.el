@@ -60,7 +60,6 @@
   "Parse all JSON files in reply DIRECTORY that start with the word 'target'.
    Returns a list of two items: a vector of names, and a hash table
    mapping names to source path vectors."
-  (interactive "DChoose directory: ")
   (let ((name-vector '())
         (name-path-map (make-hash-table :test 'equal)))
     (dolist (file (directory-files-recursively directory "^target.*\\.json$"))
@@ -76,6 +75,13 @@
     (setq targets (reverse name-vector))
     (setq sources_by_targets name-path-map)))
 
+(defun print-all-target-names (json-result)
+  "Print all target names in the given JSON result."
+  (with-output-to-temp-buffer "*All Target Names*"
+    (let ((name-vector json-result))
+      (dolist (name name-vector)
+        (princ (concat name "\n"))))))
+
 (defun my/run-cmake ()
   "Run CMake."
   (interactive)
@@ -87,15 +93,25 @@
           (cd cmake-build-dir)
           (compile (concat "cmake .. " (mapconcat 'identity cmake-flags " ")))
           (cd "..")
-          (parse-cmake-reply (concat cmake-build-dir ".cmake/api/v1/reply")))
+          (parse-cmake-reply (concat cmake-build-dir "/.cmake/api/v1/reply")))
       (message "CMake build directory not found, please create one first."))))
+
+(defun my/print-function-result ()
+  "Call function F and print its result to the message buffer."
+  (interactive)
+  ;; (let ((root (locate-dominating-file default-directory "CMakeLists.txt")))
+  ;; (when root
+  ;;   (message "Project root: %s" root))))
+;;  (message "%s" (projectile-project-root)))
+  (message "%s" (concat (my/create-build-dir) "/.cmake/api/v1/reply")))
 
 (defun my-cmake-build-target ()
   "Prompt the user to choose a target from `cmake --build <build-dir> --target help',
   and then build the chosen target."
   (interactive)
+  (print-all-target-names targets)
   (let* ((allTargets targets)
-         (target (completing-read "Build target: " allTargets)))
+         (target (completing-read (concat "Build target (" (mapconcat 'identity allTargets " ") "): ") allTargets)))
     (compile (concat "cmake --build " (my/create-build-dir) " --target " target) t)))
 
 (defun compile-project (target)
