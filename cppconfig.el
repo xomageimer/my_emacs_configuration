@@ -18,6 +18,8 @@
 (setq lsp-ui-sidline-show-hover t)
 (setq lsp-ui-sideline-show-code-actions t)
 
+(setq lsp-headerline-breadcrumb-enable nil)
+
 (add-hook 'lsp-mode-hook (lambda ()
    (setq-local lsp-xref-keep-region-history t)))
 

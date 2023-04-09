@@ -53,6 +53,29 @@
     (write-region "" nil filepath)
     (message "File created: %s" filepath)))
 
+(defvar targets nil)
+(defvar sources_by_targets nil)
+
+(defun parse-cmake-reply (directory)
+  "Parse all JSON files in reply DIRECTORY that start with the word 'target'.
+   Returns a list of two items: a vector of names, and a hash table
+   mapping names to source path vectors."
+  (interactive "DChoose directory: ")
+  (let ((name-vector '())
+        (name-path-map (make-hash-table :test 'equal)))
+    (dolist (file (directory-files-recursively directory "^target.*\\.json$"))
+      (with-temp-buffer
+        (insert-file-contents file)
+        (let ((json-object-type 'hash-table))
+          (let* ((json (json-read))
+                 (name (gethash "name" json))
+                 (path-vector (mapcar (lambda (source) (gethash "path" source))
+                                      (gethash "sources" json))))
+            (push name name-vector)
+            (puthash name path-vector name-path-map)))))
+    (setq targets (reverse name-vector))
+    (setq sources_by_targets name-path-map)))
+
 (defun my/run-cmake ()
   "Run CMake."
   (interactive)
@@ -62,40 +85,17 @@
         (progn
           (create-cmake-query cmake-build-dir "codemodel-v2")
           (cd cmake-build-dir)
-          (compile (concat "cmake .. " (mapconcat 'identity cmake-flags " "))))
+          (compile (concat "cmake .. " (mapconcat 'identity cmake-flags " ")))
+          (cd "..")
+          (parse-cmake-reply (concat cmake-build-dir ".cmake/api/v1/reply")))
       (message "CMake build directory not found, please create one first."))))
-
-(defun my-cmake-targets ()
-  "Return a list of targets from `cmake --build <build-dir> --target help',
-  excluding targets with extensions and trimming targets with colon."
-  (let* ((build-dir (my/create-build-dir))
-         (default-directory build-dir)
-         (buffer-name "*compilation*"))
-    ;; Запускаем команду `cmake --build <build-dir> --target help`
-    (compile (concat "cmake --build " build-dir " --target help") t)
-    ;; Ждем, пока процесс завершится и результат будет выведен в буфер
-    (while (process-live-p (get-buffer-process buffer-name))
-      (accept-process-output nil 0.1))
-    ;; Обрабатываем результат
-    (with-current-buffer buffer-name
-      (goto-char (point-min))
-      (let ((targets '()))
-        (while (not (eobp))
-          (let ((line (buffer-substring-no-properties
-                       (line-beginning-position)
-                       (line-end-position))))
-            (when (and (not (string-match "\\..*$" line))
-                       (not (string-match ":.*$" line)))
-              (push line targets)))
-          (forward-line))
-        (nreverse targets)))))
 
 (defun my-cmake-build-target ()
   "Prompt the user to choose a target from `cmake --build <build-dir> --target help',
   and then build the chosen target."
   (interactive)
-  (let* ((targets (my-cmake-targets))
-         (target (completing-read "Build target: " targets)))
+  (let* ((allTargets targets)
+         (target (completing-read "Build target: " allTargets)))
     (compile (concat "cmake --build " (my/create-build-dir) " --target " target) t)))
 
 (defun compile-project (target)
