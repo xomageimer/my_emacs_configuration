@@ -107,24 +107,29 @@
       (compile compile-command))))
 
 (defun build-and-run-project (target)
-    (interactive
+  (interactive
    (list (completing-read "Enter target name: "
                           (or targets
                               (progn (my/run-cmake)
                                      targets)))))
   (let ((build-dir (my/create-build-dir))
-        (compile-command (concat "cd " (projectile-project-root) " && cmake --build " (build-dir) " --target " target)))
-    (compilation-start compile-command 'compilation-mode (lambda (proc) (when (eq (process-status proc) 'exit) (async-shell-command (concat (build-dir) " /" target))) :sync t))))
+        (compile-command))
+    (setq build-dir (my/create-build-dir))
+    (setq compile-command (concat "cd " (projectile-project-root) " && cmake --build " build-dir " --target " target))
+    (progn
+      (compile compile-command)
+      (async-shell-command (concat (projectile-project-root) "/" build-dir "/" target)))))
 
 (defun build-and-debug-project (target)
-    (interactive
+   (interactive
    (list (completing-read "Enter target name: "
                           (or targets
                               (progn (my/run-cmake)
                                      targets)))))
-  (let ((build-dir (my/create-build-dir))
-        (compile-command (concat "cd " (projectile-project-root) " && cmake --build " (build-dir) " --target " target)))
-    (compilation-start compile-command 'compilation-mode (lambda (proc) (when (eq (process-status proc) 'exit) (gdb (concat "gdb -i=mi " (concat (build-dir) " /" target))))) :sync t)))
+  (let ((build-dir nil))
+    (setq build-dir (my/create-build-dir))
+    (let (compile-command (concat "cd " (projectile-project-root) " && cmake --build " build-dir " --target " target)))
+    (compilation-start compile-command 'compilation-mode (lambda (proc) (when (eq (process-status proc) 'exit) (gdb (concat "gdb -i=mi " (concat build-dir " /" target))))) :sync t)))
 
 
 ;;(global-set-key (kbd "<f5>") 'build-and-run-project)
