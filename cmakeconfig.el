@@ -96,46 +96,43 @@
           (parse-cmake-reply (concat cmake-build-dir "/.cmake/api/v1/reply")))
       (message "CMake build directory not found, please create one first."))))
 
-(defun my/print-function-result ()
-  "Call function F and print its result to the message buffer."
-  (interactive)
-  ;; (let ((root (locate-dominating-file default-directory "CMakeLists.txt")))
-  ;; (when root
-  ;;   (message "Project root: %s" root))))
-;;  (message "%s" (projectile-project-root)))
-  (message "%s" (concat (my/create-build-dir) "/.cmake/api/v1/reply")))
-
-(defun my-cmake-build-target ()
-  "Prompt the user to choose a target from `cmake --build <build-dir> --target help',
-  and then build the chosen target."
-  (interactive)
-;;  (print-all-target-names targets)
-  (let* ((allTargets targets)
-         (target (completing-read (concat "Build target (" (mapconcat 'identity allTargets " ") "): ") allTargets)))
-    (compile (concat "cmake --build " (my/create-build-dir) " --target " target) t)))
-
 (defun compile-project (target)
-  (interactive "MEnter target name: ")
-  (cmake-ide-run-cmake)
-  (let ((build-dir (concat (projectile-project-root) "build/"))
-        (compile-command (concat "cd " (projectile-project-root) " && cmake --build build --target " target)))
+  (interactive
+   (list (completing-read "Enter target name: "
+                          (or targets
+                              (progn (my/run-cmake)
+                                     targets)))))
+  (let ((build-dir (my/create-build-dir))
+        (compile-command (concat "cd " (projectile-project-root) " && cmake --build " build-dir " --target " target)))
     (compile compile-command)))
 
+;; (defun compile-project (target)
+;;    (when (null targets)
+;;       (parse-cmake-reply (concat (my/create-build-dir) "/.cmake/api/v1/reply")))
+;;   (interactive (list (completing-read "Enter target name: " targets)))
+;;   (my/with-cmake  
+;;   (let* ((build-dir (concat (projectile-project-root) "build/"))
+;;          (compile-command (concat "cd " (projectile-project-root) " && cmake --build build --target " target)))
+;;     (compilation-start compile-command 'compilation-mode (lambda (proc) (when (eq (process-status proc) 'exit) (message "Compilation finished")) :sync t)))))
+
 (defun build-and-run-project (target)
-  (interactive "MEnter target name: ")
-  (compile-project target)
+   (when (null targets)
+      (parse-cmake-reply (concat (my/create-build-dir) "/.cmake/api/v1/reply")))
+  (interactive (list (completing-read "Enter target name: " targets)))
+  (my/with-cmake
   (let ((build-dir (concat (projectile-project-root) "build/"))
         (compile-command (concat "cd " (projectile-project-root) " && cmake --build build --target " target " && " (projectile-project-root) "build/" target)))
-    (compile compile-command)
-    (async-shell-command (concat (projectile-project-root) "build/" target))))
+    (compilation-start compile-command 'compilation-mode (lambda (proc) (when (eq (process-status proc) 'exit) (async-shell-command (concat (projectile-project-root) "build/" target))) :sync t)))))
 
 (defun build-and-debug-project (target)
-  (interactive "MEnter target name: ")
-  (compile-project target)
+   (when (null targets)
+      (parse-cmake-reply (concat (my/create-build-dir) "/.cmake/api/v1/reply")))
+  (interactive (list (completing-read "Enter target name: " targets)))
+  (my/with-cmake
   (let ((build-dir (concat (projectile-project-root) "build/"))
         (compile-command (concat "cd " (projectile-project-root) " && cmake --build build --target " target)))
-    (compile compile-command)
-    (gdb (concat "gdb -i=mi " (concat (projectile-project-root) "build/" target)))))
+    (compilation-start compile-command 'compilation-mode (lambda (proc) (when (eq (process-status proc) 'exit) (gdb (concat "gdb -i=mi " (concat (projectile-project-root) "build/" target))))) :sync t))))
+
 
 ;;(global-set-key (kbd "<f5>") 'build-and-run-project)
 ;;(global-set-key (kbd "<f6>") 'build-and-debug-project)
