@@ -118,21 +118,24 @@
     (setq compile-command (concat "cd " (projectile-project-root) " && cmake --build " build-dir " --target " target))
     (progn
       (compile compile-command)
-      (async-shell-command (concat (projectile-project-root) "/" build-dir "/" target)))))
+      (async-shell-command (concat build-dir "/" target)))))
 
 (defun build-and-debug-project (target)
-   (interactive
+  (interactive
    (list (completing-read "Enter target name: "
                           (or targets
                               (progn (my/run-cmake)
                                      targets)))))
-  (let ((build-dir nil))
+  (let ((build-dir (my/create-build-dir))
+        (compile-command))
     (setq build-dir (my/create-build-dir))
-    (let (compile-command (concat "cd " (projectile-project-root) " && cmake --build " build-dir " --target " target)))
-    (compilation-start compile-command 'compilation-mode (lambda (proc) (when (eq (process-status proc) 'exit) (gdb (concat "gdb -i=mi " (concat build-dir " /" target))))) :sync t)))
+    (setq compile-command (concat "cd " (projectile-project-root) " && cmake --build " build-dir " --target " target))
+    (progn
+      (compile compile-command)
+      (gdb (concat "gdb -i=mi " (concat build-dir "/" target))))))
 
 
-;;(global-set-key (kbd "<f5>") 'build-and-run-project)
-;;(global-set-key (kbd "<f6>") 'build-and-debug-project)
+(global-set-key (kbd "<f5>") 'build-and-run-project)
+(global-set-key (kbd "<f6>") 'build-and-debug-project)
 (global-set-key (kbd "<f7>") 'compile-project)
 (global-set-key (kbd "<f8>") 'my/run-cmake)
