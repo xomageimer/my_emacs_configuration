@@ -132,8 +132,8 @@
     (setq compile-command (concat "cd " (projectile-project-root) " && cmake --build " build-dir " --target " target))
     (progn
       (compile compile-command)
+      (tab-bar-new-tab-to)
       (gdb (concat "gdb -i=mi " (concat build-dir "/" target))))))
-
 
 (global-set-key (kbd "<f5>") 'build-and-run-project)
 (global-set-key (kbd "<f6>") 'build-and-debug-project)
