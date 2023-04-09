@@ -106,6 +106,8 @@
     (let ((compile-command (concat "cd " (projectile-project-root) " && cmake --build " build-dir " --target " target)))
       (compile compile-command))))
 
+(require 'async)
+
 (defun build-and-run-project (target)
   (interactive
    (list (completing-read "Enter target name: "
@@ -118,7 +120,13 @@
     (setq compile-command (concat "cd " (projectile-project-root) " && cmake --build " build-dir " --target " target))
     (progn
       (compile compile-command)
-      (async-shell-command (concat build-dir "/" target)))))
+      (async-start
+       `(lambda ()
+          (let ((result (shell-command-to-string ,(concat build-dir "/" target))))
+            (list result)))
+       `(lambda (result)
+          (message "Build output:\n%s" (car result))
+          (async-shell-command (concat ,build-dir "/bin/" ,target)))))))
 
 (defun build-and-debug-project (target)
   (interactive
@@ -132,8 +140,14 @@
     (setq compile-command (concat "cd " (projectile-project-root) " && cmake --build " build-dir " --target " target))
     (progn
       (compile compile-command)
-      (tab-bar-new-tab-to)
-      (gdb (concat "gdb -i=mi " (concat build-dir "/" target))))))
+      (async-start
+       `(lambda ()
+          (let ((result (shell-command-to-string ,(concat build-dir "/" target))))
+            (list result)))
+       `(lambda (result)
+          (message "Build output:\n%s" (car result))
+          (tab-bar-new-tab-to)
+          (gdb (concat "gdb -i=mi " (concat ,build-dir "/bin/" ,target))))))))
 
 (global-set-key (kbd "<f5>") 'build-and-run-project)
 (global-set-key (kbd "<f6>") 'build-and-debug-project)
