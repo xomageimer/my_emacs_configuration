@@ -116,32 +116,6 @@
 
 (require 'async)
 
-;; (defun build-and-run-project (target)
-;;   (interactive
-;;    (list (completing-read "Enter target name: "
-;;                           (or targets
-;;                               (progn (my/run-cmake)
-;;                                      targets)))))
-;;   (let ((build-dir (my/create-build-dir))
-;;         (compile-command))
-;;     (setq build-dir (my/create-build-dir))
-;;     (setq compile-command (concat "cd " (projectile-project-root) " && cmake --build " build-dir " --target " target))
-;;     (progn
-;;       (compile compile-command)
-;;       (async-start
-;;        `(lambda ()
-;;           (let ((result (shell-command-to-string ,(concat build-dir "/" target))))
-;;             (list result)))
-;;        (lambda (result)
-;;          (message "Build output:\n%s" (car result))
-;;         (async-start
-;;          `(lambda ()
-;;             (let ((result (shell-command-to-string ,(concat build-dir "/" target))))
-;;               (list result)))
-;;          `(lambda (result)
-;;             (message "Build output:\n%s" (car result))
-;;             (async-shell-command (concat ,build-dir "/" ,target) nil nil))))))))
-
 (defun build-and-run-project (target)
   (interactive
    (list (completing-read "Enter target name: "
@@ -156,9 +130,9 @@
     (compile compile-command)
     (set-process-sentinel (get-buffer-process (compilation-find-buffer))
                           `(lambda (process event)
-                             (my-compilation-sentinel process event ,target)))))
+                             (run-sentinel process event ,target)))))
 
-(defun my-compilation-sentinel (process event target)
+(defun run-sentinel (process event target)
   (when (eq (process-status process) 'exit)
     (let ((target-path (gethash target targets_by_path)))
       (async-shell-command (concat (my/create-build-dir) "/" target-path)))))
@@ -169,20 +143,21 @@
                           (or targets
                               (progn (my/run-cmake)
                                      targets)))))
-  (let ((build-dir (my/create-build-dir))
+  (let ((compilation-buffer-name-function (lambda (mode) (concat "*Debugging " target "*")))
+        (build-dir (my/create-build-dir))
         (compile-command))
     (setq build-dir (my/create-build-dir))
     (setq compile-command (concat "cd " (projectile-project-root) " && cmake --build " build-dir " --target " target))
-    (progn
-      (compile compile-command)
-      (async-start
-       `(lambda ()
-          (let ((result (shell-command-to-string ,(concat build-dir "/" target))))
-            (list result)))
-       `(lambda (result)
-          (message "Build output:\n%s" (car result))
-          (tab-bar-new-tab-to)
-          (gdb (concat "gdb -i=mi " (concat ,build-dir "/bin/" ,target))))))))
+    (compile compile-command)
+    (set-process-sentinel (get-buffer-process (compilation-find-buffer))
+                          `(lambda (process event)
+                             (debug-sentinel process event ,target)))))
+
+(defun debug-sentinel (process event target)
+  (when (eq (process-status process) 'exit)
+    (let ((target-path (gethash target targets_by_path)))
+      (tab-bar-new-tab-to)
+      (gdb (concat "gdb -i=mi " (concat (my/create-build-dir) "/" target-path))))))
 
 (global-set-key (kbd "<f5>") 'build-and-run-project)
 (global-set-key (kbd "<f6>") 'build-and-debug-project)
