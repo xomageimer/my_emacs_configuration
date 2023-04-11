@@ -210,7 +210,7 @@
             (push name name-vector)
             (puthash name path-vector name-path-map)
             (dolist (artifact-path artifact-vector)
-              (puthash name (concat directory "/" artifact-path) name-by-path))))))
+              (puthash name artifact-path name-by-path))))))
     (setq targets (reverse name-vector))
     (setq sources_by_targets name-path-map)
     (setq targets_by_path name-by-path))) 

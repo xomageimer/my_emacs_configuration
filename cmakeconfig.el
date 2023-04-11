@@ -54,13 +54,16 @@
 
 (defvar targets nil)
 (defvar sources_by_targets nil)
+(defvar targets_by_path nil)
 
 (defun parse-cmake-reply (directory)
+  (interactive "DEnter directory:")
   "Parse all JSON files in reply DIRECTORY that start with the word 'target'.
    Returns a list of two items: a vector of names, and a hash table
-   mapping names to source path vectors."
+   mapping names to source path vectors. Also creates a hash table mapping paths to names."
   (let ((name-vector '())
-        (name-path-map (make-hash-table :test 'equal)))
+        (name-path-map (make-hash-table :test 'equal))
+        (name-by-path (make-hash-table :test 'equal)))
     (dolist (file (directory-files-recursively directory "^target.*\\.json$"))
       (with-temp-buffer
         (insert-file-contents file)
@@ -68,11 +71,16 @@
           (let* ((json (json-read))
                  (name (gethash "name" json))
                  (path-vector (mapcar (lambda (source) (gethash "path" source))
-                                      (gethash "sources" json))))
+                                      (gethash "sources" json)))
+                 (artifact-vector (mapcar (lambda (artifact) (gethash "path" artifact))
+                                      (gethash "artifacts" json))))
             (push name name-vector)
-            (puthash name path-vector name-path-map)))))
+            (puthash name path-vector name-path-map)
+            (dolist (artifact-path artifact-vector)
+              (puthash name artifact-path name-by-path))))))
     (setq targets (reverse name-vector))
-    (setq sources_by_targets name-path-map)))
+    (setq sources_by_targets name-path-map)
+    (setq targets_by_path name-by-path)))
 
 (defun print-all-target-names (json-result)
   "Print all target names in the given JSON result."
@@ -108,49 +116,52 @@
 
 (require 'async)
 
-(defun build-and-run-project (target)
-  (interactive
-   (list (completing-read "Enter target name: "
-                          (or targets
-                              (progn (my/run-cmake)
-                                     targets)))))
-  (let ((build-dir (my/create-build-dir))
-        (compile-command))
-    (setq build-dir (my/create-build-dir))
-    (setq compile-command (concat "cd " (projectile-project-root) " && cmake --build " build-dir " --target " target))
-    (progn
-      (compile compile-command)
-      (async-start
-       `(lambda ()
-          (let ((result (shell-command-to-string ,(concat build-dir "/" target))))
-            (list result)))
-       (lambda (result)
-         (message "Build output:\n%s" (car result))
-        (async-start
-         `(lambda ()
-            (let ((result (shell-command-to-string ,(concat build-dir "/" target))))
-              (list result)))
-         `(lambda (result)
-            (message "Build output:\n%s" (car result))
-            (async-shell-command (concat ,build-dir "/" ,target) nil nil))))))))
-
 ;; (defun build-and-run-project (target)
 ;;   (interactive
 ;;    (list (completing-read "Enter target name: "
 ;;                           (or targets
 ;;                               (progn (my/run-cmake)
 ;;                                      targets)))))
-;;   (let ((compilation-buffer-name-function (lambda (mode) (concat "*Running " target "*")))
-;;         (build-dir (my/create-build-dir))
+;;   (let ((build-dir (my/create-build-dir))
 ;;         (compile-command))
 ;;     (setq build-dir (my/create-build-dir))
 ;;     (setq compile-command (concat "cd " (projectile-project-root) " && cmake --build " build-dir " --target " target))
-;;     (compile compile-command)
-;;     (set-process-sentinel (get-buffer-process (compilation-find-buffer)) #'my-compilation-sentinel)))
+;;     (progn
+;;       (compile compile-command)
+;;       (async-start
+;;        `(lambda ()
+;;           (let ((result (shell-command-to-string ,(concat build-dir "/" target))))
+;;             (list result)))
+;;        (lambda (result)
+;;          (message "Build output:\n%s" (car result))
+;;         (async-start
+;;          `(lambda ()
+;;             (let ((result (shell-command-to-string ,(concat build-dir "/" target))))
+;;               (list result)))
+;;          `(lambda (result)
+;;             (message "Build output:\n%s" (car result))
+;;             (async-shell-command (concat ,build-dir "/" ,target) nil nil))))))))
 
-;; (defun my-compilation-sentinel (process event)
-;;   (when (eq (process-status process) 'exit)
-;;     (message "Compilation finished!")))
+(defun build-and-run-project (target)
+  (interactive
+   (list (completing-read "Enter target name: "
+                          (or targets
+                              (progn (my/run-cmake)
+                                     targets)))))
+  (let ((compilation-buffer-name-function (lambda (mode) (concat "*Running " target "*")))
+        (build-dir (my/create-build-dir))
+        (compile-command))
+    (setq build-dir (my/create-build-dir))
+    (setq compile-command (concat "cd " (projectile-project-root) " && cmake --build " build-dir " --target " target))
+    (compile compile-command)
+    (set-process-sentinel (get-buffer-process (compilation-find-buffer))
+                          `(lambda (process event)
+                             (my-compilation-sentinel process event ,target)))))
+
+(defun my-compilation-sentinel (process event target)
+  (when (eq (process-status process) 'exit)
+    (let ((target-path (gethash target targets_by_path)))
+      (async-shell-command (concat (my/create-build-dir) "/" target-path)))))
 
 (defun build-and-debug-project (target)
   (interactive

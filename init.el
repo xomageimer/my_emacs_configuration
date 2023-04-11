@@ -357,3 +357,13 @@
 
 (global-set-key (kbd "C-x t <left>") 'tab-bar-move-tab-backward)
 (global-set-key (kbd "C-x t <right>") 'tab-bar-move-tab)
+
+;; Enable M-x kill-process (to kill the current buffer's process).
+(put 'kill-process 'interactive-form
+     '(interactive
+       (let ((proc (get-buffer-process (current-buffer))))
+         (if (process-live-p proc)
+             (unless (yes-or-no-p (format "Kill %S? " proc))
+               (error "Process not killed"))
+           (error (format "Buffer %s has no process" (buffer-name))))
+         nil)))
