@@ -294,7 +294,7 @@
 (load-user-file "cmakeconfig.el")
 
 ;; load for marco paintin
-(load-user-file "deffunctions.el")
+;;(load-user-file "deffunctions.el")
 
 (delete-selection-mode 1)   ; включаем режим удаления выделенного текста
 (setq yank-undo-function 'yank-unbounded)   ; настраиваем замену выделенного текста при вставке
@@ -357,6 +357,8 @@
 
 (global-set-key (kbd "C-x t <left>") 'tab-bar-move-tab-backward)
 (global-set-key (kbd "C-x t <right>") 'tab-bar-move-tab)
+
+(setq ripgrep-arguments '("-S" "-u" "-i"))
 
 ;; Enable M-x kill-process (to kill the current buffer's process).
 (put 'kill-process 'interactive-form
