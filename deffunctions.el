@@ -185,6 +185,56 @@
 ;;     (setq targets (reverse name-vector))
 ;;     (setq sources_by_targets name-path-map)))
 
+(defvar targets nil)
+(defvar sources_by_targets nil)
+(defvar targets_by_path nil)
+
+(defun parse-cmake-reply (directory)
+  (interactive "DEnter directory:")
+  "Parse all JSON files in reply DIRECTORY that start with the word 'target'.
+   Returns a list of two items: a vector of names, and a hash table
+   mapping names to source path vectors. Also creates a hash table mapping paths to names."
+  (let ((name-vector '())
+        (name-path-map (make-hash-table :test 'equal))
+        (name-by-path (make-hash-table :test 'equal)))
+    (dolist (file (directory-files-recursively directory "^target.*\\.json$"))
+      (with-temp-buffer
+        (insert-file-contents file)
+        (let ((json-object-type 'hash-table))
+          (let* ((json (json-read))
+                 (name (gethash "name" json))
+                 (path-vector (mapcar (lambda (source) (gethash "path" source))
+                                      (gethash "sources" json)))
+                 (artifact-vector (mapcar (lambda (artifact) (gethash "path" artifact))
+                                      (gethash "artifacts" json))))
+            (push name name-vector)
+            (puthash name path-vector name-path-map)
+            (dolist (artifact-path artifact-vector)
+              (puthash name (concat directory "/" artifact-path) name-by-path))))))
+    (setq targets (reverse name-vector))
+    (setq sources_by_targets name-path-map)
+    (setq targets_by_path name-by-path))) 
+
+(defun print-name-by-path ()
+  (interactive)
+  "Prints the contents of the name-by-path hash table."
+  (maphash (lambda (path name)
+             (message "Path: %s, Name: %s" path name))
+           targets_by_path))
+
+(defun print-path-by-name (name)
+    (interactive
+   (list (completing-read "Enter target name: "
+                          (or targets
+                              (progn (my/run-cmake)
+                                     targets)))))
+  "Prints the path associated with NAME in the name-path-map hash table."
+  (let ((path-vector (gethash name targets_by_path)))
+    (if path-vector
+        (dolist (path path-vector)
+          (message "Name: %s, Path: %s" name path))
+      (message "Name %s not found." name))))
+
 ;; (defun initialize-my-json-map ()
 ;;   (setq my-json-map (parse-json-files-in-directory "/path/to/directory")))
 
@@ -193,7 +243,17 @@
 ;; Далее вы можете обращаться к my-json-map в любом месте вашей программы
 
 ;;"~/main/cmake-build-debug/.cmake/api/v1/reply"
-;;(parse-json-files-in-directory "~/main/cmake-build-debug/.cmake/api/v1/reply")
+(parse-cmake-reply "~/main/cmake-build-debug/.cmake/api/v1/reply")
+
+(defun print-targets-by-path-to-buffer ()
+  (interactive)
+  "Prints the contents of the targets_by_path hash table to a new buffer."
+  (let ((buffer (generate-new-buffer "*Targets by Path*")))
+    (with-current-buffer buffer
+      (maphash (lambda (path name)
+                 (insert (format "Path: %s, Name: %s\n" path name)))
+               targets_by_path))
+    (switch-to-buffer buffer)))
 
 (defun print-all-targets-for-source (json-hash source)
   "Print all targets for the given source file."
@@ -210,7 +270,14 @@
       (dolist (name name-vector)
         (princ (concat name "\n"))))))
 
-;;(print-target-for-source sources_by_targets "Sources/Aggregator/test/AggregatorLogicTests.cpp")
+(defun find-path-by-name (name)
+  (interactive "MEnter target name: ")
+  (let ((path (gethash name targets_by_path)))
+    (if path
+        (message "Path for %s: %s" name path)
+      (message "Name %s not found" name))))
+
+(print-all-targets-for-source sources_by_targets "Sources/Aggregator/test/AggregatorLogicTests.cpp")
 ;;(print-all-target-names targets)
 
 ;; (setq json-result (parse-json-files-in-directory "~/Downloads/Mython-master/build/.cmake/api/v1/reply"))

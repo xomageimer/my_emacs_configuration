@@ -124,9 +124,33 @@
        `(lambda ()
           (let ((result (shell-command-to-string ,(concat build-dir "/" target))))
             (list result)))
-       `(lambda (result)
-          (message "Build output:\n%s" (car result))
-          (async-shell-command (concat ,build-dir "/bin/" ,target)))))))
+       (lambda (result)
+         (message "Build output:\n%s" (car result))
+        (async-start
+         `(lambda ()
+            (let ((result (shell-command-to-string ,(concat build-dir "/" target))))
+              (list result)))
+         `(lambda (result)
+            (message "Build output:\n%s" (car result))
+            (async-shell-command (concat ,build-dir "/" ,target) nil nil))))))))
+
+;; (defun build-and-run-project (target)
+;;   (interactive
+;;    (list (completing-read "Enter target name: "
+;;                           (or targets
+;;                               (progn (my/run-cmake)
+;;                                      targets)))))
+;;   (let ((compilation-buffer-name-function (lambda (mode) (concat "*Running " target "*")))
+;;         (build-dir (my/create-build-dir))
+;;         (compile-command))
+;;     (setq build-dir (my/create-build-dir))
+;;     (setq compile-command (concat "cd " (projectile-project-root) " && cmake --build " build-dir " --target " target))
+;;     (compile compile-command)
+;;     (set-process-sentinel (get-buffer-process (compilation-find-buffer)) #'my-compilation-sentinel)))
+
+;; (defun my-compilation-sentinel (process event)
+;;   (when (eq (process-status process) 'exit)
+;;     (message "Compilation finished!")))
 
 (defun build-and-debug-project (target)
   (interactive
