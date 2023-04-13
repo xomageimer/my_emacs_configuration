@@ -42,43 +42,43 @@
 
 ;; ChatGPT
 
-(defun boost-test-case-bounds ()
-  "Returns the boundaries of the Boost test case around the current point.
-   If the current point is not inside a Boost test case, returns nil."
-  (save-excursion
-    (when (search-backward-regexp "BOOST_FIXTURE_TEST_CASE(" nil t)
-      (let ((start (match-beginning 0))
-            (end (progn (forward-sexp) (point))))
-        (when (<= start (point) end)
-          (cons start end))))))
+;; (defun boost-test-case-bounds ()
+;;   "Returns the boundaries of the Boost test case around the current point.
+;;    If the current point is not inside a Boost test case, returns nil."
+;;   (save-excursion
+;;     (when (search-backward-regexp "BOOST_FIXTURE_TEST_CASE(" nil t)
+;;       (let ((start (match-beginning 0))
+;;             (end (progn (forward-sexp) (point))))
+;;         (when (<= start (point) end)
+;;           (cons start end))))))
 
-(defun boost-test-case-bounds-at-point ()
-  "Returns the boundaries of the Boost test case at the current point.
-   If the current point is not inside a Boost test case, returns nil."
-  (let ((bounds (boost-test-case-bounds)))
-    (when (and bounds (<= (car bounds) (point) (cdr bounds)))
-      bounds)))
+;; (defun boost-test-case-bounds-at-point ()
+;;   "Returns the boundaries of the Boost test case at the current point.
+;;    If the current point is not inside a Boost test case, returns nil."
+;;   (let ((bounds (boost-test-case-bounds)))
+;;     (when (and bounds (<= (car bounds) (point) (cdr bounds)))
+;;       bounds)))
 
 (defun my-boost-test-case-name ()
   "Get the name of the Boost test case function at point."
   (interactive)
+  (forward-line 1)
   (let ((case-start (re-search-backward "\\_<BOOST_FIXTURE_TEST_CASE( *\\([^,]+\\)" nil t)))
     (if case-start
         (let ((name (match-string 1)))
           (message "Boost test case function name: %s" name))
       (message "No Boost test case found at point"))))
 
-(defun find-boost-test-suite ()
-  "Find the BOOST_AUTO_TEST_SUITE argument at point"
+(defun my-boost-test-suite-name ()
+  "Get the name of the Boost test suite at point."
   (interactive)
-  (save-excursion
-    (forward-line 1) ;; move point to the line below the current one
-    (search-forward-regexp "BOOST_AUTO_TEST_SUITE(\\(.*\\))" nil t)
-    (match-string 1)))
-
-(defun output_boost-test-suite ()
-  (interactive)
-  (message find-boost-test-suite))
+  (forward-line 1)
+  (let ((case-start (re-search-backward "\\_<BOOST_AUTO_TEST_SUITE( *\\([^,)]+\\)" nil t)))
+    (if case-start
+        (let ((name (match-string 1)))
+          (string-trim (substring name 1))
+          (message "Boost test suite name: %s" name))
+      (message "No Boost test suite found at point")))) 
 
 ;; (global-set-key (kbd "M-t") 'my-boost-test-case-name)
 
