@@ -47,7 +47,7 @@
 (use-package magit
   :ensure t)
 (global-set-key (kbd "C-c g s") 'magit-status)
-(global-set-key (kbd "C-c g l") 'magit-log)
+(global-set-key (kbd "C-c g l") 'magit-log-head)
 (global-set-key (kbd "C-c g d") 'magit-diff)
 (global-set-key (kbd "C-c g b") 'magit-blame)
 ;;; <==== magit
@@ -369,3 +369,7 @@
                (error "Process not killed"))
            (error (format "Buffer %s has no process" (buffer-name))))
          nil)))
+
+(setq comint-scroll-to-bottom-on-output t)
+
+(setq-default message-log-max nil)

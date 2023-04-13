@@ -76,8 +76,8 @@
          ("C-c i" . clang-format-region)
          ("C-c u" . clang-format-buffer)))
 
-(use-package realgud
-  :ensure t)
+;; (use-package realgud
+;;   :ensure t)
 
 ;; (setq-default mode-line-format
 ;;     (list

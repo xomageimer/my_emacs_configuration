@@ -153,11 +153,18 @@
                           `(lambda (process event)
                              (debug-sentinel process event ,target)))))
 
+(setq gdb-many-windows t gdb-use-separate-io-buffer t gud-async-input t)
+
 (defun debug-sentinel (process event target)
   (when (eq (process-status process) 'exit)
     (let ((target-path (gethash target targets_by_path)))
       (tab-bar-new-tab-to)
       (gdb (concat "gdb -i=mi " (concat (my/create-build-dir) "/" target-path))))))
+
+(add-hook 'gud-mode-hook
+          (lambda ()
+            (setq-local company-global-modes '(not gud-mode))))
+
 
 (global-set-key (kbd "<f5>") 'build-and-run-project)
 (global-set-key (kbd "<f6>") 'build-and-debug-project)

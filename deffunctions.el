@@ -68,6 +68,18 @@
           (message "Boost test case function name: %s" name))
       (message "No Boost test case found at point"))))
 
+(defun find-boost-test-suite ()
+  "Find the BOOST_AUTO_TEST_SUITE argument at point"
+  (interactive)
+  (save-excursion
+    (forward-line 1) ;; move point to the line below the current one
+    (search-forward-regexp "BOOST_AUTO_TEST_SUITE(\\(.*\\))" nil t)
+    (match-string 1)))
+
+(defun output_boost-test-suite ()
+  (interactive)
+  (message find-boost-test-suite))
+
 ;; (global-set-key (kbd "M-t") 'my-boost-test-case-name)
 
 ;;(defun my-string-at-point ()
