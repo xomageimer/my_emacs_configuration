@@ -221,7 +221,7 @@
             (push name name-vector)
             (mapc (lambda (source) (puthash (gethash "path" source) name name-path-map))
                   sources)
-            (mapc (lambda (artifact-path) (puthash artifact-path name name-by-path))
+            (mapc (lambda (artifact-path) (puthash name artifact-path name-by-path))
                   artifact-vector)))))
     (setq targets (reverse name-vector))
     (setq sources_by_targets name-path-map)
@@ -299,7 +299,7 @@
     (erase-buffer)
     (maphash (lambda (key value)
                (insert (format "%s: %s\n\n" key value)))
-             sources_by_targets)
+             targets_by_path)
     (pop-to-buffer (current-buffer))))
 
 (display-args-hash)
