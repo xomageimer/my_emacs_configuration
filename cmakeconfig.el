@@ -102,13 +102,6 @@
     (setq targets_by_path name-by-path))
     (parse-args-file))
 
-(defun print-all-target-names (json-result)
-  "Print all target names in the given JSON result."
-  (with-output-to-temp-buffer "*All Target Names*"
-    (let ((name-vector json-result))
-      (dolist (name name-vector)
-        (princ (concat name "\n"))))))
-
 (defun my/run-cmake ()
   "Run CMake."
   (interactive)
@@ -144,18 +137,20 @@
                                      targets)))))
   (let ((compilation-buffer-name-function (lambda (mode) (concat "*Running " target "*")))
         (build-dir (my/create-build-dir))
-        (compile-command))
+        (compile-command)
+        (args))
     (setq build-dir (my/create-build-dir))
     (setq compile-command (concat "cd " (projectile-project-root) " && cmake --build " build-dir " --target " target))
+    (setq args (get-arg-from-target target))
     (compile compile-command)
     (set-process-sentinel (get-buffer-process (compilation-find-buffer))
                           `(lambda (process event)
-                             (run-sentinel process event ,target)))))
+                             (run-sentinel process event ,target ,args)))))
 
-(defun run-sentinel (process event target)
+(defun run-sentinel (process event target args)
   (when (eq (process-status process) 'exit)
     (let ((target-path (gethash target targets_by_path)))
-      (async-shell-command (concat (my/create-build-dir) "/" target-path)))))
+      (async-shell-command (concat (my/create-build-dir) "/" target-path " " args)))))
 
 (defun build-and-debug-project (target)
   (interactive
@@ -165,21 +160,23 @@
                                      targets)))))
   (let ((compilation-buffer-name-function (lambda (mode) (concat "*Debugging " target "*")))
         (build-dir (my/create-build-dir))
-        (compile-command))
+        (compile-command)
+        (args))
     (setq build-dir (my/create-build-dir))
     (setq compile-command (concat "cd " (projectile-project-root) " && cmake --build " build-dir " --target " target))
+    (setq args (get-arg-from-target target))
     (compile compile-command)
     (set-process-sentinel (get-buffer-process (compilation-find-buffer))
                           `(lambda (process event)
-                             (debug-sentinel process event ,target)))))
+                             (debug-sentinel process event ,target ,args)))))
 
 (setq gdb-many-windows t gdb-use-separate-io-buffer t gud-async-input t)
 
-(defun debug-sentinel (process event target)
+(defun debug-sentinel (process event target args)
   (when (eq (process-status process) 'exit)
     (let ((target-path (gethash target targets_by_path)))
       (tab-bar-new-tab-to)
-      (gdb (concat "gdb -i=mi " (concat (my/create-build-dir) "/" target-path))))))
+      (gdb (concat "gdb -i=mi " (concat (my/create-build-dir) "/" target-path " " args))))))
 
 (add-hook 'gud-mode-hook
           (lambda ()
