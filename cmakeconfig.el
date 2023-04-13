@@ -56,6 +56,25 @@
 (defvar sources_by_targets nil)
 (defvar targets_by_path nil)
 
+(defvar targets-by-args (make-hash-table :test 'equal)
+  "Hash table to store target arguments.")
+
+(defun get-arg-from-target (target)
+  (if (hash-table-p targets-by-args)
+      (or (gethash target targets-by-args) "")
+    ""))
+
+(defun parse-args-file ()
+  "Parse args.in file and store target arguments in hash table."
+  (interactive)
+  (let ((args-file (expand-file-name "args.in" (projectile-project-root)))
+        (targets ()))
+    (when (file-exists-p args-file)
+      (with-temp-buffer
+        (insert-file-contents args-file)
+        (while (re-search-forward "^\\(.*?\\):\\s-*\\(.+\\)$" nil t)
+          (puthash (match-string 1) (match-string 2) targets-by-args))))))
+
 (defun parse-cmake-reply (directory)
   (interactive "DEnter directory:")
   "Parse all JSON files in reply DIRECTORY that start with the word 'target'.
@@ -80,7 +99,8 @@
               (puthash name artifact-path name-by-path))))))
     (setq targets (reverse name-vector))
     (setq sources_by_targets name-path-map)
-    (setq targets_by_path name-by-path)))
+    (setq targets_by_path name-by-path))
+    (parse-args-file))
 
 (defun print-all-target-names (json-result)
   "Print all target names in the given JSON result."
@@ -165,8 +185,68 @@
           (lambda ()
             (setq-local company-global-modes '(not gud-mode))))
 
-
 (global-set-key (kbd "<f5>") 'build-and-run-project)
 (global-set-key (kbd "<f6>") 'build-and-debug-project)
 (global-set-key (kbd "<f7>") 'compile-project)
 (global-set-key (kbd "<f8>") 'my/run-cmake)
+
+(defun get-project-relative-file-name ()
+  (when-let ((project-root (projectile-project-root))
+             (file-name (buffer-file-name)))
+    (file-relative-name file-name project-root)))
+
+(defun boost-test-case-name ()
+  "Get the name of the Boost test case function at point."
+  (interactive)
+  (forward-line 1)
+  (let ((case-start (re-search-backward "\\_<BOOST_FIXTURE_TEST_CASE( *\\([^,]+\\)" nil t)))
+    (if case-start
+        (let ((case (match-string 1)))
+          (message "Boost test case function name: %s" case))
+      (error "No Boost test case found at point"))))
+
+(defun boost-test-suite-name ()
+  "Get the name of the Boost test suite at point."
+  (interactive)
+  (forward-line 1)
+  (let ((case-start (re-search-backward "\\_<BOOST_AUTO_TEST_SUITE( *\\([^,)]+\\)" nil t)))
+    (if case-start
+        (let ((suite (match-string 1)))
+          (string-trim (substring suite 1))
+          (message "Boost test suite name: %s" suite))
+      (error "No Boost test suite found at point"))))
+
+(defun display-args-hash ()
+  (interactive)
+  (with-current-buffer (get-buffer-create "*args-hash*")
+    (erase-buffer)
+    (maphash (lambda (key value)
+               (insert (format "%s : %s\n" key value)))
+              targets-by-args)
+    (pop-to-buffer (current-buffer))))
+
+;; (defun build-and-boost-test-case ()
+;;   (or targets
+;;     (progn (my/run-cmake)
+;;              targets))
+;;   (interactive)
+;;   (let  (current_file (get-project-relative-file-name))
+;;         (test_name (concat (boost-test-case-name) (boost-test-suite-name)))
+;;         ;;(compilation-buffer-name-function (lambda (mode) (concat "*Running: " test_name "*")))
+;;         (target (gethash current_file sources_by_targets))
+;;         (build-dir (my/create-build-dir))
+;;         (compile-command))
+;;     (setq test_name (concat (boost-test-case-name) (boost-test-suite-name)))
+;;     (setq build-dir (my/create-build-dir))
+;;     (setq compile-command (concat "cd " (projectile-project-root) " && cmake --build " build-dir " --target " target))
+;;     (compile compile-command)
+;;     (set-process-sentinel (get-buffer-process (compilation-find-buffer))
+;;                           `(lambda (process event)
+;;                              (debug-sentinel process event ,target ,test_name))))
+
+;; ;; TODO нужно переделать чтобы вызывалось просто как комманд лайн для обычного run-sentinel!!!!
+
+;; (defun test-run-sentinel (process event target test_arg)
+;;   (when (eq (process-status process) 'exit)
+;;     (let ((target-path (gethash target targets_by_path)))
+;;        (async-shell-command (concat (my/create-build-dir) "/" target-path " --run-test=" test_arg " --color_output=false --report_format=HRF --show_progress=no --log_level=warning" )))))
