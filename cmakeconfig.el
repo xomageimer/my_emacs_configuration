@@ -272,3 +272,7 @@
     (set-process-sentinel (get-buffer-process (compilation-find-buffer))
                           `(lambda (process event)
                              (debug-sentinel process event ,target ,test_args)))))
+
+
+(global-set-key (kbd "C-x <f5>") 'run-boost-test-case)
+(global-set-key (kbd "C-x <f6>") 'debug-boost-test-case)
