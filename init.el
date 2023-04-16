@@ -291,7 +291,7 @@
 (load-user-file "cppconfig.el")
 
 ;; load cmake configuration
-(load-user-file "cmakeconfig.el")
+(load-user-file "buildconfig.el")
 
 ;; load for marco paintin
 ;;(load-user-file "deffunctions.el")
