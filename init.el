@@ -43,6 +43,13 @@
       scroll-preserve-screen-position 1)   
 ;;; <===== настройки для плавного скролинга и получения последних файлов
 
+(setq use-package-always-ensure t)
+
+;; (use-package solarized-themes
+;;   :ensure t
+;;   :config
+;;   (load-theme 'solarized-dark t))
+
 ;;; ====> пакет для работы с git // TODO: вынести в отдельный конфиг
 (use-package magit
   :ensure t)
@@ -51,6 +58,11 @@
 (global-set-key (kbd "C-c g d") 'magit-diff)
 (global-set-key (kbd "C-c g b") 'magit-blame)
 ;;; <==== magit
+
+(use-package async
+  :ensure t
+  :config
+  (async-bytecomp-package-mode 1))
 
 ;;; ====> пакет для работы с парными символами, упрощает работу с ними
 (use-package smartparens
@@ -310,11 +322,11 @@
  '(custom-enabled-themes '(solarized-dark-high-contrast))
  '(custom-safe-themes
    '("833ddce3314a4e28411edf3c6efde468f6f2616fc31e17a62587d6a9255f4633" "d89e15a34261019eec9072575d8a924185c27d3da64899905f8548cbd9491a36" "00445e6f15d31e9afaa23ed0d765850e9cd5e929be5e8e63b114a3346236c44c" "285d1bf306091644fb49993341e0ad8bafe57130d9981b680c1dbd974475c5c7" "830877f4aab227556548dc0a28bf395d0abe0e3a0ab95455731c9ea5ab5fe4e1" "3e200d49451ec4b8baa068c989e7fba2a97646091fd555eca0ee5a1386d56077" "51ec7bfa54adf5fff5d466248ea6431097f5a18224788d0bd7eb1257a4f7b773" "7f1d414afda803f3244c6fb4c2c64bea44dac040ed3731ec9d75275b9e831fe5" "fee7287586b17efbfda432f05539b58e86e059e78006ce9237b8732fde991b4c" default))
- '(gdb-many-windows t)
+ '(gdb-many-windows t t)
  '(global-display-line-numbers-mode t)
  '(menu-bar-mode nil)
  '(package-selected-packages
-   '(lsp-mode lsp-focus flycheck-plantuml markdown-mode cmake-project clang-format+ google-c-style cl-lib cpputils-cmake clang-format edebug-x dap-mode fzf ag unicode-fonts default-font-presets counsel-projectile rg company-lsp projectile cmake-mode yasnippet-snippets realgud-jdb neotree which-key rtags-xref ivy-rtags ac-rtags magit smartparens company solarized-theme vertico consult use-package compat))
+   '(solarized-themes lsp-mode lsp-focus flycheck-plantuml markdown-mode cmake-project clang-format+ google-c-style cl-lib cpputils-cmake clang-format edebug-x dap-mode fzf ag unicode-fonts default-font-presets counsel-projectile rg company-lsp projectile cmake-mode yasnippet-snippets realgud-jdb neotree which-key rtags-xref ivy-rtags ac-rtags magit smartparens company solarized-theme vertico consult use-package compat))
  '(recentf-mode t)
  '(tab-bar-mode t)
  '(tab-stop-list

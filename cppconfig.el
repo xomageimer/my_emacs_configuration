@@ -41,17 +41,17 @@
   :custom
   (company-minimum-prefix-length 1)
   (company-idle-delay 0.0))
-;;; <==== company
 
-(use-package company-capf
-  :after lsp-mode company
-  :custom
-  (company-lsp-async t)
-  (company-lsp-cache-candidates 'auto)
-  (company-lsp-enable-snippet t)
-  (company-lsp-enable-recompletion t)
-  :config
-  (push 'company-lsp company-backends))
+(when (package-installed-p 'company-capf)
+  (use-package company-capf
+    :after lsp-mode company
+    :custom
+    (company-lsp-async t)
+    (company-lsp-cache-candidates 'auto)
+    (company-lsp-enable-snippet t)
+    (company-lsp-enable-recompletion t)
+    :config
+    (push 'company-lsp company-backends)))
 
 (use-package rg
   :defer t)
