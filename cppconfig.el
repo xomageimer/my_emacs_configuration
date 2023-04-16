@@ -31,45 +31,18 @@
 (global-set-key (kbd "C-c e") 'list-flycheck-errors)
 
 (use-package counsel
-  :ensure t
-  :bind (("M-x" . counsel-M-x)
-         ("C-x C-f" . counsel-find-file)
-         ("C-x b" . counsel-switch-buffer))
-  :config
-  (setq ivy-initial-inputs-alist nil) ; убираем "^" в начале вводимых строк
-  (setq ivy-re-builders-alist
-        '((t . ivy--regex-ignore-order))))
+  :ensure t)
 
 (use-package projectile
   :hook (prog-mode . projectile-mode)
   :custom
-  (projectile-completion-system 'ivy)
+  (projectile-completion-system 'default)
   (projectile-enable-caching t)
   (projectile-indexing-method 'hybrid)
   (projectile-globally-ignored-directories '(".git" ".svn" ".hg" ".idea" ".vscode" ".eunit" "node_modules" "dist" "build" "target"))
   (projectile-globally-ignored-file-suffixes '(".o" ".elc" ".pyc" ".class" ".min.js" ".min.css"))
   :config
   (projectile-mode))
-
-(use-package counsel-projectile
-  :ensure t
-  :config
-  (counsel-projectile-mode)
-  (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map))
-
-(use-package swiper
-  :ensure t
-  :bind (("C-s" . swiper)))
-
-(use-package ivy
-  :ensure t
-  :init
-  (ivy-mode)
-  :config
-  (setq ivy-use-virtual-buffers t)
-  (setq enable-recursive-minibuffers t)
-  (setq ivy-re-builders-alist
-        '((t . ivy--regex-ignore-order))))
 
 (use-package counsel-projectile
   :ensure t)
@@ -114,43 +87,8 @@
 ;; (use-package realgud
 ;;   :ensure t)
 
-;; (setq-default mode-line-format
-;;     (list
-;;     ;; здесь настройки для отображения строки состояния
-;;     '(:eval (propertize "%b " 'face 'font-lock-keyword-face)) ;; здесь происходит отображение имени буфера
-;;     '(:eval (propertize (buffer-file-name) 'face 'font-lock-variable-name-face))
-;;     ))
-
-;; (defun my/lsp-headerline-breadcrumb-segments ()
-;;   "Return the breadcrumb segments for the currently selected window."
-;;   (let ((buffer (window-buffer (selected-window))))
-;;     (with-current-buffer buffer
-;;       (list 'file-name))))
-
-;; (setq lsp-headerline-breadcrumb-segments 'my/lsp-headerline-breadcrumb-segments)
-
 (setq-default indent-tabs-mode nil)
 (setq-default tab-width 4)                ; tabs four spaces wide
 (defvaralias 'c-basic-offset 'tab-width)  ; Set the C/C++/Java.. mode to use this tab width
-
-;; (defun my-find-tag-in-new-window ()
-;;   "Find the tag at point and display the results in a new window."
-;;   (interactive)
-;;   (let ((tag (find-tag-default)))
-;;     (split-window-right)
-;;     (find-tag tag)))
-
-;; (global-set-key (kbd "C-c w") 'my-find-tag-in-new-window)
-;; (set-register ?. (point-marker))
-;; (defun my-pop-tag-mark ()
-;;   "Return to where find-tag-in-new-window was last invoked and close the search window."
-;;   (interactive)
-;;   (let ((marker (get-register ?.)))
-;;     (when marker
-;;       (switch-to-buffer (marker-buffer marker))
-;;       (goto-char (marker-position marker))
-;;       (delete-window (selected-window))
-;;       (pop-to-buffer (marker-buffer marker) t)
-;;       (set-register ?. nil))))
 
 (global-set-key (kbd "C-c c a") 'lsp-ui-sideline-apply-code-actions)

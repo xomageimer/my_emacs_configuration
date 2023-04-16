@@ -385,3 +385,8 @@
 (setq comint-scroll-to-bottom-on-output t)
 
 (setq-default message-log-max nil)
+
+(setq savehist-file "~/.emacs.d/history")
+(savehist-mode 1)
+(setq history-length t)
+(setq history-length 100)
