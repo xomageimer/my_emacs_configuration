@@ -72,10 +72,7 @@
         '((t . ivy--regex-ignore-order))))
 
 (use-package counsel-projectile
-  :ensure t
-  :bind
-  (("C-x C-p" . counsel-projectile-rg)
-   ("C-x C-g" . counsel-projectile-find-file)))
+  :ensure t)
 
 ;;; ====> Пакет company в Emacs - это автодополнитель, который помогает вам быстрее писать код, предоставляя предложения для завершения кода, основанные на том, что вы уже написали.
 (use-package company
@@ -102,6 +99,8 @@
 
 (use-package rg
   :defer t)
+
+(use-package deadgrep)
 
 (global-set-key (kbd "C-c s") 'counsel-projectile-rg)
 (global-set-key (kbd "C-c f") 'counsel-projectile-find-file)
