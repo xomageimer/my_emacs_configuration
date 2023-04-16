@@ -30,6 +30,53 @@
 (global-set-key (kbd "C-c d") 'lsp-describe-thing-at-point)
 (global-set-key (kbd "C-c e") 'list-flycheck-errors)
 
+(use-package counsel
+  :ensure t
+  :bind (("M-x" . counsel-M-x)
+         ("C-x C-f" . counsel-find-file)
+         ("C-x b" . counsel-switch-buffer))
+  :config
+  (setq ivy-initial-inputs-alist nil) ; убираем "^" в начале вводимых строк
+  (setq ivy-re-builders-alist
+        '((t . ivy--regex-ignore-order))))
+
+(use-package projectile
+  :hook (prog-mode . projectile-mode)
+  :custom
+  (projectile-completion-system 'ivy)
+  (projectile-enable-caching t)
+  (projectile-indexing-method 'hybrid)
+  (projectile-globally-ignored-directories '(".git" ".svn" ".hg" ".idea" ".vscode" ".eunit" "node_modules" "dist" "build" "target"))
+  (projectile-globally-ignored-file-suffixes '(".o" ".elc" ".pyc" ".class" ".min.js" ".min.css"))
+  :config
+  (projectile-mode))
+
+(use-package counsel-projectile
+  :ensure t
+  :config
+  (counsel-projectile-mode)
+  (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map))
+
+(use-package swiper
+  :ensure t
+  :bind (("C-s" . swiper)))
+
+(use-package ivy
+  :ensure t
+  :init
+  (ivy-mode)
+  :config
+  (setq ivy-use-virtual-buffers t)
+  (setq enable-recursive-minibuffers t)
+  (setq ivy-re-builders-alist
+        '((t . ivy--regex-ignore-order))))
+
+(use-package counsel-projectile
+  :ensure t
+  :bind
+  (("C-x C-p" . counsel-projectile-rg)
+   ("C-x C-g" . counsel-projectile-find-file)))
+
 ;;; ====> Пакет company в Emacs - это автодополнитель, который помогает вам быстрее писать код, предоставляя предложения для завершения кода, основанные на том, что вы уже написали.
 (use-package company
   :ensure t
@@ -55,17 +102,6 @@
 
 (use-package rg
   :defer t)
-
-(use-package projectile
-  :hook (prog-mode . projectile-mode)
-  :custom
-  (projectile-completion-system 'default)
-  (projectile-enable-caching t)
-  (projectile-indexing-method 'hybrid)
-  (projectile-globally-ignored-directories '(".git" ".svn" ".hg" ".idea" ".vscode" ".eunit" "node_modules" "dist" "build" "target"))
-  (projectile-globally-ignored-file-suffixes '(".o" ".elc" ".pyc" ".class" ".min.js" ".min.css"))
-  :config
-  (projectile-mode))
 
 (global-set-key (kbd "C-c s") 'counsel-projectile-rg)
 (global-set-key (kbd "C-c f") 'counsel-projectile-find-file)

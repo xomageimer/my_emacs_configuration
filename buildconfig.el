@@ -158,7 +158,7 @@
           (compilation-buffer nil))
       (setq compilation-buffer (get-buffer (buffer-name)))
       (with-current-buffer compilation-buffer)
-          (async-shell-command (concat (my/create-build-dir) "/" target-path " " args)))))
+          (async-shell-command (concat (my/create-build-dir) "/" target-path " " args) buffer-name))))
 
 (defun build-and-debug-project (target)
   (interactive
