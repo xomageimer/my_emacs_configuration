@@ -180,11 +180,31 @@
 
 (setq gdb-many-windows t gdb-use-separate-io-buffer t gud-async-input t)
 
+(defun my/create-gdbinit-file ()
+  "Create a .gdbinit file in the build directory if it does not exist and return the path to the file."
+  (interactive)
+  (let ((gdbinit-path (concat (my/create-build-dir) "/.gdbinit")))
+    (unless (file-exists-p gdbinit-path)
+      (write-region "" nil gdbinit-path))
+    gdbinit-path))
+
+(defun my/append-to-gdbinit (str)
+  "Append STR as a new line to .gdbinit file in build directory."
+  (let* ((build-dir (my/create-build-dir))
+         (gdbinit-file (concat build-dir "/.gdbinit")))
+    (when (file-exists-p gdbinit-file)
+      (with-temp-buffer
+        (insert-file-contents gdbinit-file)
+        (goto-char (point-max))
+        (unless (bolp) (insert "\n"))
+        (insert str "\n")
+        (write-file gdbinit-file t)))))
+
 (defun debug-sentinel (process event target args)
   (when (eq (process-status process) 'exit)
     (let ((target-path (gethash target targets_by_path)))
       (tab-bar-new-tab-to)
-      (gdb (concat "gdb -i=mi -args " (concat (my/create-build-dir) "/" target-path " " args))))))
+      (gdb (concat "gdb -i=mi --command=" (concat (my/create-build-dir) "/.gdbinit") " --args " (concat (my/create-build-dir) "/" target-path " " args))))))
 
 (add-hook 'gud-mode-hook
           (lambda ()
@@ -270,6 +290,7 @@
     (setq current_file (get-project-relative-file-name))
     (setq target (gethash current_file sources_by_targets))
     (setq test_case (boost-test-case-name))
+    (my/append-to-gdbinit (concat "break " current_file ":" test_case))
     (setq test_suite (boost-test-suite-name))
     (setq test_name (concat test_suite "/" test_case))
     (goto-char saved_position)
