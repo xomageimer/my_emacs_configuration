@@ -180,11 +180,11 @@
 
 (setq gdb-many-windows t gdb-use-separate-io-buffer t gud-async-input t)
 
-(defun debug-sentinel (process event target args ex)
+(defun debug-sentinel (process event target args)
   (when (eq (process-status process) 'exit)
     (let ((target-path (gethash target targets_by_path)))
       (tab-bar-new-tab-to)
-      (gdb (concat "gdb -i=mi -ex" ex  " -args " (concat (my/create-build-dir) "/" target-path " " args))))))
+      (gdb (concat "gdb -i=mi -args " (concat (my/create-build-dir) "/" target-path " " args))))))
 
 (add-hook 'gud-mode-hook
           (lambda ()
