@@ -145,7 +145,7 @@
     (setq build-dir (my/create-build-dir))
     (setq compile-command (concat "cd " (projectile-project-root) " && cmake --build " build-dir " --target " target))
     (setq buffer-name (concat "*Running " target "*"))
-    (compilation-buffer-name-function (lambda (mode) buffer-name))
+    (setq compilation-buffer-name-function (lambda (mode) buffer-name))
     (setq args (get-arg-from-target target))
     (compile compile-command)
     (set-process-sentinel (get-buffer-process (compilation-find-buffer))
