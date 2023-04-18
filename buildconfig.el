@@ -67,9 +67,9 @@
 ;; TODO нужно убрать это из parse cmake и сделать чтение из файла для определенного таргета без хэш таблицы
 (defun parse-args-file ()
   "Parse args.in file and store target arguments in hash table."
-  (interactive)
   (let ((args-file (expand-file-name "args.in" (projectile-project-root)))
         (targets ()))
+        (clrhash targets-by-args)
     (when (file-exists-p args-file)
       (with-temp-buffer
         (insert-file-contents args-file)
@@ -146,6 +146,7 @@
     (setq compile-command (concat "cd " (projectile-project-root) " && cmake --build " build-dir " --target " target))
     (setq buffer-name (concat "*Running " target "*"))
     (setq compilation-buffer-name-function (lambda (mode) buffer-name))
+    (funcall 'parse-args-file)
     (setq args (get-arg-from-target target))
     (compile compile-command)
     (set-process-sentinel (get-buffer-process (compilation-find-buffer))
@@ -172,6 +173,7 @@
         (args))
     (setq build-dir (my/create-build-dir))
     (setq compile-command (concat "cd " (projectile-project-root) " && cmake --build " build-dir " --target " target))
+    (funcall 'parse-args-file)
     (setq args (get-arg-from-target target))
     (compile compile-command)
     (set-process-sentinel (get-buffer-process (compilation-find-buffer))

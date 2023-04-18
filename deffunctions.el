@@ -200,6 +200,18 @@
 (defvar targets nil)
 (defvar sources_by_targets nil)
 (defvar targets_by_path nil)
+(defvar targets_by_args nil)
+
+(defun parse-args-file ()
+  "Parse args.in file and store target arguments in hash table."
+  (interactive)
+  (let ((args-file (expand-file-name "args.in" (projectile-project-root)))
+        (targets ()))
+    (when (file-exists-p args-file)
+      (with-temp-buffer
+        (insert-file-contents args-file)
+        (while (re-search-forward "^\\(.*?\\):\\s-*\\(.+\\)$" nil t)
+          (puthash (match-string 1) (match-string 2) targets-by-args))))))
 
 (defun parse-cmake-reply (directory)
   (interactive "DEnter directory:")
@@ -255,7 +267,9 @@
 ;; Далее вы можете обращаться к my-json-map в любом месте вашей программы
 
 ;;"~/main/cmake-build-debug/.cmake/api/v1/reply"
-(parse-cmake-reply "~/main/cmake-build-debug/.cmake/api/v1/reply")
+;;(parse-cmake-reply "~/main/cmake-build-debug/.cmake/api/v1/reply")
+
+(parse-args-file)
 
 (defun print-targets-by-path-to-buffer ()
   (interactive)
@@ -292,17 +306,17 @@
 ;;(print-all-targets-for-source sources_by_targets "Sources/Connectors/test/Incrementalfilejournaltests.cpp")
 ;;(print-all-target-names targets)
 
-;; (defun display-args-hash ()
-;;   "Display contents of `my-args-hash' in a separate buffer."
-;;   (interactive)
-;;   (with-current-buffer (get-buffer-create "*args-hash*")
-;;     (erase-buffer)
-;;     (maphash (lambda (key value)
-;;                (insert (format "%s: %s\n\n" key value)))
-;;              targets_by_path)
-;;     (pop-to-buffer (current-buffer))))
+(defun display-args-hash ()
+  "Display contents of `my-args-hash' in a separate buffer."
+  (interactive)
+  (with-current-buffer (get-buffer-create "*args-hash*")
+    (erase-buffer)
+    (maphash (lambda (key value)
+               (insert (format "%s: %s\n\n" key value)))
+             targets_by_args)
+    (pop-to-buffer (current-buffer))))
 
-;; (display-args-hash)
+(display-args-hash)
 
 (defun copy-all-bookmarks-to-array ()
   "Функция, которая копирует все закладки в массив и выводит их в сообщении."
