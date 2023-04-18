@@ -84,9 +84,6 @@
          ("C-c i" . clang-format-region)
          ("C-c u" . clang-format-buffer)))
 
-;; (use-package realgud
-;;   :ensure t)
-
 (setq-default indent-tabs-mode nil)
 (setq-default tab-width 4)                ; tabs four spaces wide
 (defvaralias 'c-basic-offset 'tab-width)  ; Set the C/C++/Java.. mode to use this tab width

@@ -306,7 +306,7 @@
 (load-user-file "buildconfig.el")
 
 ;; load for marco paintin
-;;(load-user-file "deffunctions.el")
+(load-user-file "deffunctions.el")
 
 (delete-selection-mode 1)   ; включаем режим удаления выделенного текста
 (setq yank-undo-function 'yank-unbounded)   ; настраиваем замену выделенного текста при вставке
@@ -326,7 +326,7 @@
  '(global-display-line-numbers-mode t)
  '(menu-bar-mode nil)
  '(package-selected-packages
-   '(solarized-themes lsp-mode lsp-focus flycheck-plantuml markdown-mode cmake-project clang-format+ google-c-style cl-lib cpputils-cmake clang-format edebug-x dap-mode fzf ag unicode-fonts default-font-presets counsel-projectile rg company-lsp projectile cmake-mode yasnippet-snippets realgud-jdb neotree which-key rtags-xref ivy-rtags ac-rtags magit smartparens company solarized-theme vertico consult use-package compat))
+   '(fringe-helper realgud-lldb realgud quelpa google-translate pdf-tools solarized-themes lsp-mode lsp-focus flycheck-plantuml markdown-mode cmake-project clang-format+ google-c-style cl-lib cpputils-cmake clang-format edebug-x dap-mode fzf ag unicode-fonts default-font-presets counsel-projectile rg company-lsp projectile cmake-mode yasnippet-snippets realgud-jdb neotree which-key rtags-xref ivy-rtags ac-rtags magit smartparens company solarized-theme vertico consult use-package compat))
  '(recentf-mode t)
  '(tab-bar-mode t)
  '(tab-stop-list
@@ -390,3 +390,5 @@
 (savehist-mode 1)
 (setq history-length t)
 (setq history-length 100)
+
+(global-set-key (kbd "C-x O") 'previous-window-any-frame)

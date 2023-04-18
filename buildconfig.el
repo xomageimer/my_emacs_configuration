@@ -204,7 +204,7 @@
   (when (eq (process-status process) 'exit)
     (let ((target-path (gethash target targets_by_path)))
       (tab-bar-new-tab-to)
-      (gdb (concat "gdb -i=mi --command=" (concat (my/create-build-dir) "/.gdbinit") " --args " (concat (my/create-build-dir) "/" target-path " " args))))))
+  (gdb (concat "gdb -i=mi --command=" (my/create-gdbinit-file) " --args " (concat (my/create-build-dir) "/" target-path " " args))))))
 
 (add-hook 'gud-mode-hook
           (lambda ()

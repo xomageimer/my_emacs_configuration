@@ -292,17 +292,27 @@
 ;;(print-all-targets-for-source sources_by_targets "Sources/Connectors/test/Incrementalfilejournaltests.cpp")
 ;;(print-all-target-names targets)
 
-(defun display-args-hash ()
-  "Display contents of `my-args-hash' in a separate buffer."
-  (interactive)
-  (with-current-buffer (get-buffer-create "*args-hash*")
-    (erase-buffer)
-    (maphash (lambda (key value)
-               (insert (format "%s: %s\n\n" key value)))
-             targets_by_path)
-    (pop-to-buffer (current-buffer))))
+;; (defun display-args-hash ()
+;;   "Display contents of `my-args-hash' in a separate buffer."
+;;   (interactive)
+;;   (with-current-buffer (get-buffer-create "*args-hash*")
+;;     (erase-buffer)
+;;     (maphash (lambda (key value)
+;;                (insert (format "%s: %s\n\n" key value)))
+;;              targets_by_path)
+;;     (pop-to-buffer (current-buffer))))
 
-(display-args-hash)
+;; (display-args-hash)
+
+(defun copy-all-bookmarks-to-array ()
+  "Функция, которая копирует все закладки в массив и выводит их в сообщении."
+  (interactive)
+  (let ((bookmarks (bookmark-all-names)))
+    (if bookmarks
+        (progn
+          (message "Все закладки:\n%s" (mapconcat 'identity bookmarks "\n"))
+          bookmarks)
+      (message "Закладок не найдено."))))
 
 ;; (setq json-result (parse-json-files-in-directory "~/Downloads/Mython-master/build/.cmake/api/v1/reply"))
 ;; (print-target-for-source json-result "lexer.cpp")
