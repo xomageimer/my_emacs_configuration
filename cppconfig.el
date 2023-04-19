@@ -26,7 +26,7 @@
 (global-set-key (kbd "C-c l") 'lsp)
 (global-set-key (kbd "C-c u") 'lsp-ui-mode)
 (global-set-key (kbd "C-c r") 'lsp-ui-peek-find-references)
-(global-set-key (kbd "C-c t") 'lsp-find-references)
+(global-set-key (kbd "C-c q") 'lsp-find-references)
 (global-set-key (kbd "C-c d") 'lsp-describe-thing-at-point)
 (global-set-key (kbd "C-c e") 'list-flycheck-errors)
 
@@ -73,8 +73,6 @@
 (use-package rg
   :defer t)
 
-(use-package deadgrep)
-
 (global-set-key (kbd "C-c s") 'counsel-projectile-rg)
 (global-set-key (kbd "C-c f") 'counsel-projectile-find-file)
 
@@ -89,3 +87,6 @@
 (defvaralias 'c-basic-offset 'tab-width)  ; Set the C/C++/Java.. mode to use this tab width
 
 (global-set-key (kbd "C-c c a") 'lsp-ui-sideline-apply-code-actions)
+
+(use-package flycheck-clang-tidy
+  :ensure t)

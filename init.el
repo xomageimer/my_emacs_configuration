@@ -326,8 +326,11 @@
  '(global-display-line-numbers-mode t)
  '(menu-bar-mode nil)
  '(package-selected-packages
-   '(fringe-helper realgud-lldb realgud quelpa google-translate pdf-tools solarized-themes lsp-mode lsp-focus flycheck-plantuml markdown-mode cmake-project clang-format+ google-c-style cl-lib cpputils-cmake clang-format edebug-x dap-mode fzf ag unicode-fonts default-font-presets counsel-projectile rg company-lsp projectile cmake-mode yasnippet-snippets realgud-jdb neotree which-key rtags-xref ivy-rtags ac-rtags magit smartparens company solarized-theme vertico consult use-package compat))
+   '(flycheck-clang-tidy fringe-helper realgud-lldb realgud quelpa google-translate pdf-tools solarized-themes lsp-mode lsp-focus flycheck-plantuml markdown-mode cmake-project clang-format+ google-c-style cl-lib cpputils-cmake clang-format edebug-x dap-mode fzf ag unicode-fonts default-font-presets counsel-projectile rg company-lsp projectile cmake-mode yasnippet-snippets realgud-jdb neotree which-key rtags-xref ivy-rtags ac-rtags magit smartparens company solarized-theme vertico consult use-package compat))
  '(recentf-mode t)
+ '(safe-local-variable-values
+   '((flycheck-mode . t)
+     (flycheck-clang-tidy-checks . "*, -readability-identifier-naming")))
  '(tab-bar-mode t)
  '(tab-stop-list
    '(4 8 12 16 20 24 28 32 36 40 44 48 52 56 60 64 68 72 76 80 84 88 92 96 100 104 108 112 116 120))
@@ -392,3 +395,32 @@
 (setq history-length 100)
 
 (global-set-key (kbd "C-x O") 'previous-window-any-frame)
+
+(use-package deadgrep)
+
+(setq-default large-file-warning-threshold (* 25 1024 1024 1024)) ;; 25 GB
+
+(use-package pdf-tools
+  :ensure t
+  :config
+  ;; Установка pdf-tools
+  (pdf-tools-install)
+  ;; Добавление ключей прокрутки
+  (setq pdf-view-continuous-scroll-mode t)
+  (setq pdf-view-continuous-scroll-speed-mode 0.5)
+  ;; Добавление сокращений для работы с pdf-view-mode
+  (define-key pdf-view-mode-map (kbd "j") 'pdf-view-next-line-or-next-page)
+  (define-key pdf-view-mode-map (kbd "k") 'pdf-view-previous-line-or-previous-page)
+  (define-key pdf-view-mode-map (kbd "l") 'image-forward-hscroll)
+  (define-key pdf-view-mode-map (kbd "h") 'image-backward-hscroll))
+
+(use-package google-translate
+  :ensure t
+  :config
+  ;; Настройка Google Translate
+  (require 'google-translate)
+  (require 'google-translate-default-ui)
+  (setq google-translate-default-source-language "en")
+  (setq google-translate-default-target-language "ru")
+  ;; Добавление сокращения для быстрого перевода выделенного текста
+  (global-set-key (kbd "C-c t") 'google-translate-at-point))
