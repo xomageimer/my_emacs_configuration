@@ -90,3 +90,5 @@
 
 (use-package flycheck-clang-tidy
   :ensure t)
+
+(setq enable-local-variables :all)

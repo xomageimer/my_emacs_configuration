@@ -424,3 +424,5 @@
   (setq google-translate-default-target-language "ru")
   ;; Добавление сокращения для быстрого перевода выделенного текста
   (global-set-key (kbd "C-c t") 'google-translate-at-point))
+
+(setq enable-local-variables t)
