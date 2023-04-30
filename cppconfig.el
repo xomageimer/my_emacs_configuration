@@ -91,4 +91,10 @@
 (use-package flycheck-clang-tidy
   :ensure t)
 
-(setq enable-local-variables :all)
+(defun set_permission_hook ()
+  (setq enable-local-variables :all)
+  )
+
+(add-hook 'flycheck-mode-hook #'set_permission_hook)
+
+(add-hook 'desktop-restore-file-buffer-hook #'set_permission_hook)

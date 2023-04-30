@@ -151,7 +151,9 @@
     (compile compile-command)
     (set-process-sentinel (get-buffer-process (compilation-find-buffer))
                           `(lambda (process event)
-                             (run-sentinel process event ,target ,args ,buffer-name)))))
+                            (if (string-prefix-p "finished" event)
+                                (run-sentinel process event ,target ,args ,buffer-name)
+                            (error "Build failed with exit status: %d" exit-status))))))
 
 (defun run-sentinel (process event target args buffer-name)
   (when (eq (process-status process) 'exit)
@@ -178,7 +180,9 @@
     (compile compile-command)
     (set-process-sentinel (get-buffer-process (compilation-find-buffer))
                           `(lambda (process event)
-                             (debug-sentinel process event ,target ,args)))))
+                             (if (string-prefix-p "finished" event)
+                                 (debug-sentinel process event ,target ,args)
+                             (error "Build failed with exit status: %d" exit-status))))))
 
 (setq gdb-many-windows t gdb-use-separate-io-buffer t gud-async-input t)
 
@@ -271,7 +275,9 @@
     (compile compile-command)
     (set-process-sentinel (get-buffer-process (compilation-find-buffer))
                           `(lambda (process event)
-                             (run-sentinel process event ,target ,test_args ,buffer-name)))))
+                              (if (string-prefix-p "finished" event)
+                                 (run-sentinel process event ,target ,test_args ,buffer-name)
+                              (error "Build failed with exit status: %d" exit-status))))))
 
 (defun debug-boost-test-case ()
   (or targets
@@ -303,7 +309,9 @@
     (compile compile-command)
     (set-process-sentinel (get-buffer-process (compilation-find-buffer))
                           `(lambda (process event)
-                             (debug-sentinel process event ,target ,test_args)))))
+                              (if (string-prefix-p "finished" event)
+                                 (debug-sentinel process event ,target ,test_args)
+                              (error "Build failed with exit status: %d" exit-status))))))
 
 (global-set-key (kbd "C-x <f5>") 'run-boost-test-case)
 (global-set-key (kbd "C-x <f6>") 'debug-boost-test-case)
