@@ -96,3 +96,16 @@
   )
 
 (add-hook 'flycheck-mode-hook #'set_permission_hook)
+
+(defun gud-break-and-save-to-gdbinit ()
+  "Установить точку останова в GDB на текущей строке и сохранить ее в .gdbinit в папке cmake-build."
+  (interactive)
+  (let ((current-line (line-number-at-pos))
+        (current-file (get-project-relative-file-name)))
+    (let ((gdbinit-file (my/create-gdbinit-file)))
+      (when (and (file-exists-p gdbinit-file) (file-writable-p gdbinit-file))
+        (with-temp-buffer
+          (insert (format "break %s:%d\n" current-file current-line))
+          (append-to-file (point-min) (point-max) gdbinit-file))))))
+
+(global-set-key (kbd "C-x g b") 'gud-break-and-save-to-gdbinit)

@@ -299,11 +299,11 @@
 ;; load tab and backtab keys for editing
 (load-user-file "normaltabs.el")
 
-;; load cpp configuration
-(load-user-file "cppconfig.el")
-
 ;; load cmake configuration
 (load-user-file "buildconfig.el")
+
+;; load cpp configuration
+(load-user-file "cppconfig.el")
 
 ;; load for marco paintin
 ;;(load-user-file "deffunctions.el")
