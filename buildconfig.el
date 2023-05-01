@@ -136,7 +136,7 @@
                                      targets)))))
     (let ((build-dir nil))
     (setq build-dir (my/create-build-dir))
-    (let ((compile-command (concat "cd " (projectile-project-root) " && cmake --build " build-dir " --target " target)))
+    (let ((compile-command (concat "cd " (projectile-project-root) " && cmake --build " build-dir " --target " target " -j 120")))
       (compile compile-command))))
 
 (require 'async)
