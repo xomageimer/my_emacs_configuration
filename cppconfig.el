@@ -96,5 +96,3 @@
   )
 
 (add-hook 'flycheck-mode-hook #'set_permission_hook)
-
-(add-hook 'desktop-restore-file-buffer-hook #'set_permission_hook)
