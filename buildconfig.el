@@ -103,6 +103,16 @@
     (setq targets_by_path name-by-path))
     (parse-args-file))
 
+(defun my/copy-compile-commands-json-to-root (dir)
+  "Search for the compile_commands.json file in DIR and copy it to the root of the project using Projectile."
+  (interactive "DDirectory to search for compile_commands.json file: ")
+  (let ((json-file (concat (file-name-as-directory dir) "compile_commands.json")))
+    (if (file-exists-p json-file)
+        (let ((root-dir (projectile-project-root)))
+          (copy-file json-file (concat (file-name-as-directory root-dir) "compile_commands.json") t)
+          (message "compile_commands.json file copied to the root of the project."))
+      (message "compile_commands.json file not found in the specified directory."))))
+
 (defun my/run-cmake ()
   "Run CMake."
   (interactive)
@@ -114,6 +124,7 @@
           (cd cmake-build-dir)
           (compile (concat "cmake .. " (mapconcat 'identity cmake-flags " ")))
           (cd "..")
+          (my/copy-compile-commands-json-to-root cmake-build-dir)
           (parse-cmake-reply (concat cmake-build-dir "/.cmake/api/v1/reply")))
       (message "CMake build directory not found, please create one first."))))
 
