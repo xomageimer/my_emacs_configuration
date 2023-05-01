@@ -238,12 +238,12 @@
     (file-relative-name file-name project-root)))
 
 (defun boost-test-case-name ()
-  "Get the name of the Boost test case function at point."
+  "Get the name of the nearest Boost test case function at point."
   (interactive)
   (forward-line 1)
-  (let ((case-start (re-search-backward "\\_<BOOST_FIXTURE_TEST_CASE( *\\([^,]+\\)" nil t)))
+  (let ((case-start (re-search-backward "\\_<\\(BOOST_FIXTURE_TEST_CASE\\|BOOST_AUTO_TEST_CASE\\)( *\\([^,]+\\)" nil t)))
     (if case-start
-        (match-string 1)
+        (match-string 2)
       (error "No Boost test case found at point"))))
 
 (defun boost-test-suite-name ()
