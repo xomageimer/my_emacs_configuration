@@ -206,16 +206,17 @@
     gdbinit-path))
 
 (defun my/append-to-gdbinit (str)
-  "Append STR as a new line to .gdbinit file in build directory."
+  "Append STR as a new line to .gdbinit file in build directory if it doesn't already exist."
   (let* ((build-dir (my/create-build-dir))
          (gdbinit-file (concat build-dir "/.gdbinit")))
     (when (file-exists-p gdbinit-file)
       (with-temp-buffer
         (insert-file-contents gdbinit-file)
-        (goto-char (point-max))
-        (unless (bolp) (insert "\n"))
-        (insert str "\n")
-        (write-file gdbinit-file t)))))
+        (unless (search-forward str nil t)
+          (goto-char (point-max))
+          (unless (bolp) (insert "\n"))
+          (insert str "\n")
+          (write-file gdbinit-file t))))))
 
 (defun debug-sentinel (process event target args)
   (when (eq (process-status process) 'exit)
