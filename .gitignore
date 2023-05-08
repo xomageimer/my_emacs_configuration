@@ -46,3 +46,14 @@ flycheck_*.el
 
 # network security
 /network-security.data
+
+/url/
+/transient/
+/bookmarks
+
+.lsp-session*
+/history
+projectile*
+/recentf*
+type-break*
+
