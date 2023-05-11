@@ -245,7 +245,16 @@
   (let ((case-start (re-search-backward "\\_<\\(BOOST_FIXTURE_TEST_CASE\\|BOOST_AUTO_TEST_CASE\\)( *\\([^,]+\\)" nil t)))
     (if case-start
         (match-string 2)
-      (error "No Boost test case found at point"))))
+      nil)))
+
+(defun boost-test-case-name-safe ()
+  "Get the name of the nearest Boost test case function at point."
+  (interactive)
+  (forward-line 1)
+  (let ((case-start (re-search-backward "\\_<\\(BOOST_FIXTURE_TEST_CASE\\|BOOST_AUTO_TEST_CASE\\)( *\\([^,]+\\)" nil t)))
+    (if case-start
+        (match-string 2)
+    (error "No Boost test case found at point"))))
 
 (defun boost-test-suite-name ()
   "Get the name of the Boost test suite at point."
@@ -277,7 +286,9 @@
     (setq target (gethash current_file sources_by_targets))
     (setq test_case (boost-test-case-name))
     (setq test_suite (boost-test-suite-name))
-    (setq test_name (concat test_suite "/" test_case))
+    (if (string-empty-p test_case)
+        (setq test_name test_suite)
+      (setq test_name (concat test_suite "/" test_case)))
     (goto-char saved_position)
     (setq buffer-name (concat "*Running: " test_name "*"))
     (setq compilation-buffer-name-function (lambda (mode) buffer-name))
@@ -309,7 +320,7 @@
     (setq saved_position (point))
     (setq current_file (get-project-relative-file-name))
     (setq target (gethash current_file sources_by_targets))
-    (setq test_case (boost-test-case-name))
+    (setq test_case (boost-test-case-name-safe))
     (my/append-to-gdbinit (concat "break " current_file ":" test_case))
     (setq test_suite (boost-test-suite-name))
     (setq test_name (concat test_suite "/" test_case))
