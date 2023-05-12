@@ -425,4 +425,13 @@
   ;; Добавление сокращения для быстрого перевода выделенного текста
   (global-set-key (kbd "C-c t") 'google-translate-at-point))
 
+(defun my-query-replace-regexp ()
+  "Обертка над `query-replace-regexp`, перемещает курсор в начало буфера перед выполнением замены."
+  (interactive)
+  (save-excursion
+    (goto-char (point-min))
+    (call-interactively 'query-replace-regexp)))
+
+(global-set-key (kbd "C-c C-r") ' my-query-replace-regexp)
+
 (setq enable-local-variables t)
