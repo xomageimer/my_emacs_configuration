@@ -434,4 +434,26 @@
 
 (global-set-key (kbd "C-c C-r") ' my-query-replace-regexp)
 
+(defvar surround-text-default-strings '("/* */")
+  "Список строк для окружения текста по умолчанию.")
+
+(defun surround-text-with-strings (strings)
+  "Заменяет выделенный текст, окружая его указанными строками.
+   Если указана одна строка, она будет использована для окружения с обеих сторон.
+   Если указаны две строки, первая будет вставлена вначале, а вторая в конце."
+  (interactive
+   (list (read-string "Input strings (or press enter for default): " nil nil surround-text-default-strings)))
+  (let* ((strings-list (split-string strings))
+         (text (buffer-substring (region-beginning) (region-end))))
+    (delete-region (region-beginning) (region-end))
+    (cond ((= (length strings-list) 1)
+           (insert (concat (car strings-list) text (car strings-list))))
+          ((= (length strings-list) 2)
+           (insert (concat (car strings-list) text (cadr strings-list))))))
+  (setq surround-text-default-strings strings))
+
+(setq-default surround-text-default-strings surround-text-default-strings)
+
+(global-set-key (kbd "C-c C-x s") 'surround-text-with-strings)
+
 (setq enable-local-variables t)
