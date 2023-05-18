@@ -456,4 +456,6 @@
 
 (global-set-key (kbd "C-c C-x s") 'surround-text-with-strings)
 
+(global-set-key (kbd "C-c C-x l") 'visual-line-mode)
+
 (setq enable-local-variables t)
