@@ -123,10 +123,14 @@
           (create-cmake-query cmake-build-dir "codemodel-v2")
           (cd cmake-build-dir)
           (compile (concat "cmake .. " (mapconcat 'identity cmake-flags " ")))
-          (cd "..")
-          (my/copy-compile-commands-json-to-root cmake-build-dir)
-          (parse-cmake-reply (concat cmake-build-dir "/.cmake/api/v1/reply")))
-      (message "CMake build directory not found, please create one first."))))
+           (set-process-sentinel (get-buffer-process (compilation-find-buffer))
+                                `(lambda (process event)
+                                   (if (string-prefix-p "finished" event)
+                                       (progn
+                                         (cd "..")
+                                         (my/copy-compile-commands-json-to-root ,cmake-build-dir)
+                                         (parse-cmake-reply (concat ,cmake-build-dir "/.cmake/api/v1/reply")))
+                                     (error "Cmake build failed with exit status: %d" (process-exit-status process)))))))))
 
 (defun compile-project (target)
   (interactive
