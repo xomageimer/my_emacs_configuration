@@ -124,7 +124,7 @@
           (cd cmake-build-dir)
           (compile (concat "cmake .. " (mapconcat 'identity cmake-flags " ")))
           (cd "..")
-          (my/copy-compile-commands-json-to-root cmake-build-dir)
+;;          (my/copy-compile-commands-json-to-root cmake-build-dir)
           (parse-cmake-reply (concat cmake-build-dir "/.cmake/api/v1/reply")))
       (message "CMake build directory not found, please create one first."))))
 

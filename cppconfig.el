@@ -4,6 +4,11 @@
   :commands (lsp lsp-deferred)
   :config (setq lsp-idle-delay 0.500))
 
+;(setq lsp-clients-clangd-args '("--log=verbose"))
+
+;(setq lsp-log-io t)
+
+(setq lsp-clients-clangd-executable "clangd")
 ;;(setq lsp-enable-semantic-highlighting t)
 
 (use-package lsp-ui
