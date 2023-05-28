@@ -238,6 +238,11 @@
              (file-name (buffer-file-name)))
     (file-relative-name file-name project-root)))
 
+(defun my/print-target-by-file ()
+  (interactive)
+  (let ((current-file (get-project-relative-file-name)))
+    (message "%s" (gethash current-file sources_by_targets))))
+
 (defun boost-test-case-name ()
   "Get the name of the nearest Boost test case function at point."
   (interactive)
