@@ -16,7 +16,7 @@
   :custom (lsp-ui-doc-position 'at-point))
 
 (setq lsp-ui-sideline-enable t)
-(setq lsp-ui-sideline-show-diagnostics t)
+;;(setq lsp-ui-sideline-show-diagnostics t)
 (setq lsp-ui-doc-glance-mode t)
 (setq lsp-enable-macro-expansion t)
 (setq lsp-ui-peek-always-show t)
@@ -26,7 +26,9 @@
 (setq lsp-headerline-breadcrumb-enable nil)
 
 (add-hook 'lsp-mode-hook (lambda ()
-   (setq-local lsp-xref-keep-region-history t)))
+                           (setq-local lsp-xref-keep-region-history t)))
+
+(setq lsp-clients-clangd-args '("--clang-tidy"))
 
 (global-set-key (kbd "C-c l") 'lsp)
 (global-set-key (kbd "C-c u") 'lsp-ui-mode)
@@ -34,6 +36,33 @@
 (global-set-key (kbd "C-c q") 'lsp-find-references)
 (global-set-key (kbd "C-c d") 'lsp-describe-thing-at-point)
 (global-set-key (kbd "C-c e") 'list-flycheck-errors)
+
+;;; ====> Пакет flycheck в Emacs - это плагин для автоматической проверки синтаксиса вашего кода на наличие ошибок.
+;; ------ flycheck ------
+(use-package flycheck
+  :hook (lsp-mode . flycheck-mode))
+
+;; ------ flycheck-clang-tidy ------
+(eval-after-load 'flycheck
+  '(add-hook 'flycheck-mode-hook #'flycheck-clang-tidy-setup))
+
+(use-package flycheck-clang-tidy
+  :after flycheck
+  :hook
+  (flycheck-mode . flycheck-clang-tidy-setup)
+  )
+
+(with-eval-after-load 'flycheck
+  (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc)))
+(add-hook 'c++-mode-hook (lambda () (setq flycheck-gcc-language-standard "c++17")))
+
+(add-hook 'c++-mode-hook
+          (lambda () (setq flycheck-clang-standard-library "libc++")))
+(add-hook 'c++-mode-hook
+          (lambda () (setq flycheck-clang-include-path
+                           (list "/usr/include/c++/12"))))
+
+;;; <==== flycheck
 
 (use-package counsel
   :ensure t)
