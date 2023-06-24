@@ -153,9 +153,10 @@
   (if (not my-compile-commands-path)
     (let ((compile_commands_path (process-find-compile-commands)))
       (if compile_commands_path
+          (progn
             (setq my-compile-commands-path compile_commands_path)
             (setq lsp-clients-clangd-args (list (concat "--compile-commands-dir=" my-compile-commands-path)))
-            (message "Found compile_commands.json in the project root: %s" my-compile-commands-path)
+            (message "Found compile_commands.json in the project root: %s" my-compile-commands-path))
       (message "No compile_commands.json found in the project root.")))
   (message "compile_commands.json already seted!")))
 
@@ -178,3 +179,10 @@
   (if my-compile-commands-path
       (message "Current compile_commands.json path: %s" my-compile-commands-path)
     (message "No compile_commands.json path set.")))
+
+(defun my/lsp-mode-hook ()
+  "Custom hook for lsp-mode."
+  (when (bound-and-true-p lsp-mode)
+    (my/find-compile-commands)))
+
+(add-hook 'lsp-mode-hook #'my/lsp-mode-hook)
