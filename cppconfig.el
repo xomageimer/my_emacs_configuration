@@ -28,7 +28,7 @@
 (add-hook 'lsp-mode-hook (lambda ()
                            (setq-local lsp-xref-keep-region-history t)))
 
-(setq lsp-clients-clangd-args '("--clang-tidy"))
+;;(setq lsp-clients-clangd-args '("--clang-tidy"))
 
 (global-set-key (kbd "C-c l") 'lsp)
 (global-set-key (kbd "C-c u") 'lsp-ui-mode)
@@ -143,3 +143,38 @@
           (append-to-file (point-min) (point-max) gdbinit-file))))))
 
 (global-set-key (kbd "C-x g b") 'gud-break-and-save-to-gdbinit)
+
+(defvar my-compile-commands-path nil
+  "Path to the compile_commands.json file.")
+
+(defun my/find-compile-commands ()
+  "Find compile_commands.json in the project root and set the path."
+  (interactive)
+  (if (not my-compile-commands-path)
+    (let ((compile_commands_path (process-find-compile-commands)))
+      (if compile_commands_path
+            (setq my-compile-commands-path compile_commands_path)
+            (setq lsp-clients-clangd-args (list (concat "--compile-commands-dir=" my-compile-commands-path)))
+            (message "Found compile_commands.json in the project root: %s" my-compile-commands-path)
+      (message "No compile_commands.json found in the project root.")))
+  (message "compile_commands.json already seted!")))
+
+(defun my/reset-compile-commands-path ()
+  "Reset compile_commands.json in the project root and set the path."
+  (interactive)
+  (setq my-compile-commands-path nil)
+  (my/find-compile-commands))
+
+(defun process-find-compile-commands ()
+  "Find the project root directory."
+  (let ((root-file (locate-dominating-file default-directory "compile_commands.json")))
+    (if root-file
+        (concat (projectile-project-root "compile_commands.json")
+      nil))))
+
+(defun my-show-compile-commands-path ()
+  "Show the path to the compile_commands.json file."
+  (interactive)
+  (if my-compile-commands-path
+      (message "Current compile_commands.json path: %s" my-compile-commands-path)
+    (message "No compile_commands.json path set.")))

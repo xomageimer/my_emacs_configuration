@@ -324,7 +324,7 @@
  '(ispell-dictionary nil)
  '(menu-bar-mode nil)
  '(package-selected-packages
-   '(ue embrace nerd-icons-dired nerd-icons deadgrep term-projectile projectile-codesearch consult-projectile helm projectile-ripgrep find-file-rg flycheck-clang-tidy fringe-helper realgud-lldb realgud quelpa google-translate pdf-tools solarized-themes lsp-mode lsp-focus flycheck-plantuml markdown-mode cmake-project clang-format+ google-c-style cl-lib cpputils-cmake clang-format edebug-x dap-mode fzf ag unicode-fonts default-font-presets counsel-projectile rg company-lsp projectile cmake-mode yasnippet-snippets realgud-jdb neotree which-key rtags-xref ivy-rtags ac-rtags magit smartparens company solarized-theme vertico consult use-package compat))
+   '(yasnippet srefactor-lisp srefactor ue embrace nerd-icons-dired nerd-icons deadgrep term-projectile projectile-codesearch consult-projectile helm projectile-ripgrep find-file-rg flycheck-clang-tidy fringe-helper realgud-lldb realgud quelpa google-translate pdf-tools solarized-themes lsp-mode lsp-focus flycheck-plantuml markdown-mode cmake-project clang-format+ google-c-style cl-lib cpputils-cmake clang-format edebug-x dap-mode fzf ag unicode-fonts default-font-presets counsel-projectile rg company-lsp projectile cmake-mode yasnippet-snippets realgud-jdb neotree which-key rtags-xref ivy-rtags ac-rtags magit smartparens company solarized-theme vertico consult use-package compat))
  '(recentf-mode t)
  '(safe-local-variable-values
    '((flycheck-mode . t)
@@ -459,10 +459,31 @@
 
 (use-package deadgrep)
 
-(defun show-projectile-root ()
+(defun my/show-projectile-root ()
   "Display the current Projectile project root in the minibuffer."
   (interactive)
   (message "Projectile root directory: %s" (projectile-project-root)))
 
-(global-set-key (kbd "C-c c r") 'show-projectile-root)
+(use-package yasnippet
+  :ensure t)
 
+(defvar my-compile-commands-path nil
+  "Path to the compile_commands.json file.")
+
+(defun my-find-compile-commands ()
+  "Find compile_commands.json in the project root and set the path."
+  (interactive)
+  (let ((project-root (my-find-project-root)))
+    (if project-root
+        (progn
+          (setq my-compile-commands-path (concat project-root "compile_commands.json"))
+          (setq lsp-clients-clangd-args (list (concat "--compile-commands=" my-compile-commands-path)))
+          (message "Found compile_commands.json in the project root: %s" project-root))
+      (message "No compile_commands.json found in the project root."))))
+
+(defun my-find-project-root ()
+  "Find the project root directory."
+  (let ((root-dir (locate-dominating-file default-directory "compile_commands.json")))
+    (if root-dir
+        (file-name-directory root-dir)
+      nil)))
