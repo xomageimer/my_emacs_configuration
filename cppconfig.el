@@ -93,6 +93,11 @@
   (company-minimum-prefix-length 1)
   (company-idle-delay 0.0))
 
+(use-package yasnippet
+  :ensure t)
+(require 'yasnippet)
+(yas-global-mode 1)
+
 (when (package-installed-p 'company-capf)
   (use-package company-capf
     :after lsp-mode company
