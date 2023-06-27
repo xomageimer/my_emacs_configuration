@@ -319,12 +319,12 @@
  '(custom-enabled-themes '(solarized-dark-high-contrast))
  '(custom-safe-themes
    '("833ddce3314a4e28411edf3c6efde468f6f2616fc31e17a62587d6a9255f4633" "d89e15a34261019eec9072575d8a924185c27d3da64899905f8548cbd9491a36" "00445e6f15d31e9afaa23ed0d765850e9cd5e929be5e8e63b114a3346236c44c" "285d1bf306091644fb49993341e0ad8bafe57130d9981b680c1dbd974475c5c7" "830877f4aab227556548dc0a28bf395d0abe0e3a0ab95455731c9ea5ab5fe4e1" "3e200d49451ec4b8baa068c989e7fba2a97646091fd555eca0ee5a1386d56077" "51ec7bfa54adf5fff5d466248ea6431097f5a18224788d0bd7eb1257a4f7b773" "7f1d414afda803f3244c6fb4c2c64bea44dac040ed3731ec9d75275b9e831fe5" "fee7287586b17efbfda432f05539b58e86e059e78006ce9237b8732fde991b4c" default))
- '(gdb-many-windows t t)
+ '(gdb-many-windows t)
  '(global-display-line-numbers-mode t)
  '(ispell-dictionary nil)
  '(menu-bar-mode nil)
  '(package-selected-packages
-   '(yasnippet srefactor-lisp srefactor ue embrace nerd-icons-dired nerd-icons deadgrep term-projectile projectile-codesearch consult-projectile helm projectile-ripgrep find-file-rg flycheck-clang-tidy fringe-helper realgud-lldb realgud quelpa google-translate pdf-tools solarized-themes lsp-mode lsp-focus flycheck-plantuml markdown-mode cmake-project clang-format+ google-c-style cl-lib cpputils-cmake clang-format edebug-x dap-mode fzf ag unicode-fonts default-font-presets counsel-projectile rg company-lsp projectile cmake-mode yasnippet-snippets realgud-jdb neotree which-key rtags-xref ivy-rtags ac-rtags magit smartparens company solarized-theme vertico consult use-package compat))
+   '(fireplace autotetris-mode multiple-cursors dsp-mode lsp-treemacs yasnippet srefactor-lisp srefactor ue embrace nerd-icons-dired nerd-icons deadgrep term-projectile projectile-codesearch consult-projectile helm projectile-ripgrep find-file-rg flycheck-clang-tidy fringe-helper realgud-lldb realgud quelpa google-translate pdf-tools solarized-themes lsp-mode lsp-focus flycheck-plantuml markdown-mode cmake-project clang-format+ google-c-style cl-lib cpputils-cmake clang-format edebug-x dap-mode fzf ag unicode-fonts default-font-presets counsel-projectile rg company-lsp projectile cmake-mode yasnippet-snippets realgud-jdb neotree which-key rtags-xref ivy-rtags ac-rtags magit smartparens company solarized-theme vertico consult use-package compat))
  '(recentf-mode t)
  '(safe-local-variable-values
    '((flycheck-mode . t)
@@ -332,7 +332,8 @@
  '(tab-bar-mode t)
  '(tab-stop-list
    '(4 8 12 16 20 24 28 32 36 40 44 48 52 56 60 64 68 72 76 80 84 88 92 96 100 104 108 112 116 120))
- '(tool-bar-mode nil))
+ '(tool-bar-mode nil)
+ '(warning-suppress-types '(((dap-variables-expand-variable)))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -467,23 +468,5 @@
 (use-package yasnippet
   :ensure t)
 
-(defvar my-compile-commands-path nil
-  "Path to the compile_commands.json file.")
-
-(defun my-find-compile-commands ()
-  "Find compile_commands.json in the project root and set the path."
-  (interactive)
-  (let ((project-root (my-find-project-root)))
-    (if project-root
-        (progn
-          (setq my-compile-commands-path (concat project-root "compile_commands.json"))
-          (setq lsp-clients-clangd-args (list (concat "--compile-commands=" my-compile-commands-path)))
-          (message "Found compile_commands.json in the project root: %s" project-root))
-      (message "No compile_commands.json found in the project root."))))
-
-(defun my-find-project-root ()
-  "Find the project root directory."
-  (let ((root-dir (locate-dominating-file default-directory "compile_commands.json")))
-    (if root-dir
-        (file-name-directory root-dir)
-      nil)))
+(use-package multiple-cursors
+  :ensure t)
