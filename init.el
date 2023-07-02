@@ -324,11 +324,7 @@
  '(ispell-dictionary nil)
  '(menu-bar-mode nil)
  '(package-selected-packages
-<<<<<<< Updated upstream
-   '(fireplace autotetris-mode multiple-cursors dsp-mode lsp-treemacs yasnippet srefactor-lisp srefactor ue embrace nerd-icons-dired nerd-icons deadgrep term-projectile projectile-codesearch consult-projectile helm projectile-ripgrep find-file-rg flycheck-clang-tidy fringe-helper realgud-lldb realgud quelpa google-translate pdf-tools solarized-themes lsp-mode lsp-focus flycheck-plantuml markdown-mode cmake-project clang-format+ google-c-style cl-lib cpputils-cmake clang-format edebug-x dap-mode fzf ag unicode-fonts default-font-presets counsel-projectile rg company-lsp projectile cmake-mode yasnippet-snippets realgud-jdb neotree which-key rtags-xref ivy-rtags ac-rtags magit smartparens company solarized-theme vertico consult use-package compat))
-=======
    '(exec-path-from-shell yasnippet srefactor-lisp srefactor ue embrace nerd-icons-dired nerd-icons deadgrep term-projectile projectile-codesearch consult-projectile helm projectile-ripgrep find-file-rg flycheck-clang-tidy fringe-helper realgud-lldb realgud quelpa google-translate pdf-tools solarized-themes lsp-mode lsp-focus flycheck-plantuml markdown-mode cmake-project clang-format+ google-c-style cl-lib cpputils-cmake clang-format edebug-x dap-mode fzf ag unicode-fonts default-font-presets counsel-projectile rg company-lsp projectile cmake-mode yasnippet-snippets realgud-jdb neotree which-key rtags-xref ivy-rtags ac-rtags magit smartparens company solarized-theme vertico consult use-package compat))
->>>>>>> Stashed changes
  '(recentf-mode t)
  '(safe-local-variable-values
    '((flycheck-mode . t)
@@ -350,7 +346,7 @@
 
 (defun my-enlarge-window-horizontally ()
   "Enlarge the window horizontally by 5 columns."
-  (interactive)
+  (interactive)т
   (enlarge-window-horizontally 5))
 
 (defun my-shrink-window-horizontally ()
