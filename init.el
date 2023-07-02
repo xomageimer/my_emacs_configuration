@@ -423,13 +423,18 @@
   (global-set-key (kbd "C-c t") 'google-translate-at-point))
 
 (defun my-query-replace-regexp (text-to-replace replacement-text)
-  "Обертка над `query-replace-regexp`, перемещает курсор в начало буфера перед выполнением замены."
+  "Обертка над `query-replace-regexp`, перемещает курсор в начало буфера перед выполнением замены.
+   Если что-то выделено, текст для замены по умолчанию будет равен выделенному тексту."
   (interactive
-   (list (read-string "Текст для замены: ")
-         (read-string "Текст, на который заменить: ")))
+   (let ((default-text (if (region-active-p)
+                           (buffer-substring-no-properties (region-beginning) (region-end))
+                         "")))
+     (list (read-string "Текст для замены: " default-text)
+           (read-string "Текст, на который заменить: "))))
   (save-excursion
     (goto-char (point-min))
     (query-replace-regexp text-to-replace replacement-text)))
+
 
 (global-set-key (kbd "C-c C-r") ' my-query-replace-regexp)
 
