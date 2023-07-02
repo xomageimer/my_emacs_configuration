@@ -324,7 +324,11 @@
  '(ispell-dictionary nil)
  '(menu-bar-mode nil)
  '(package-selected-packages
+<<<<<<< Updated upstream
    '(fireplace autotetris-mode multiple-cursors dsp-mode lsp-treemacs yasnippet srefactor-lisp srefactor ue embrace nerd-icons-dired nerd-icons deadgrep term-projectile projectile-codesearch consult-projectile helm projectile-ripgrep find-file-rg flycheck-clang-tidy fringe-helper realgud-lldb realgud quelpa google-translate pdf-tools solarized-themes lsp-mode lsp-focus flycheck-plantuml markdown-mode cmake-project clang-format+ google-c-style cl-lib cpputils-cmake clang-format edebug-x dap-mode fzf ag unicode-fonts default-font-presets counsel-projectile rg company-lsp projectile cmake-mode yasnippet-snippets realgud-jdb neotree which-key rtags-xref ivy-rtags ac-rtags magit smartparens company solarized-theme vertico consult use-package compat))
+=======
+   '(exec-path-from-shell yasnippet srefactor-lisp srefactor ue embrace nerd-icons-dired nerd-icons deadgrep term-projectile projectile-codesearch consult-projectile helm projectile-ripgrep find-file-rg flycheck-clang-tidy fringe-helper realgud-lldb realgud quelpa google-translate pdf-tools solarized-themes lsp-mode lsp-focus flycheck-plantuml markdown-mode cmake-project clang-format+ google-c-style cl-lib cpputils-cmake clang-format edebug-x dap-mode fzf ag unicode-fonts default-font-presets counsel-projectile rg company-lsp projectile cmake-mode yasnippet-snippets realgud-jdb neotree which-key rtags-xref ivy-rtags ac-rtags magit smartparens company solarized-theme vertico consult use-package compat))
+>>>>>>> Stashed changes
  '(recentf-mode t)
  '(safe-local-variable-values
    '((flycheck-mode . t)
@@ -422,12 +426,14 @@
   ;; Добавление сокращения для быстрого перевода выделенного текста
   (global-set-key (kbd "C-c t") 'google-translate-at-point))
 
-(defun my-query-replace-regexp ()
+(defun my-query-replace-regexp (text-to-replace replacement-text)
   "Обертка над `query-replace-regexp`, перемещает курсор в начало буфера перед выполнением замены."
-  (interactive)
+  (interactive
+   (list (read-string "Текст для замены: ")
+         (read-string "Текст, на который заменить: ")))
   (save-excursion
     (goto-char (point-min))
-    (call-interactively 'query-replace-regexp)))
+    (query-replace-regexp text-to-replace replacement-text)))
 
 (global-set-key (kbd "C-c C-r") ' my-query-replace-regexp)
 

@@ -192,6 +192,7 @@
 
 (add-hook 'lsp-mode-hook #'my/lsp-mode-hook)
 
+<<<<<<< Updated upstream
 (use-package lsp-treemacs
   :ensure t)
 (lsp-treemacs-sync-mode 1)
@@ -212,3 +213,27 @@
 ;; displays floating panel with debug buttons
 ;; requies emacs 26+
 (dap-ui-controls-mode 1)
+=======
+;; (use-package exec-path-from-shell
+;;   :ensure
+;;   :init (exec-path-from-shell-initialize))
+
+;; (use-package dap-mode
+;;   :ensure
+;;   :config
+;;   (dap-ui-mode)
+;;   (dap-ui-controls-mode 1)
+
+;;   (require 'dap-lldb)
+;;   (require 'dap-gdb-lldb)
+;;   ;; installs .extension/vscode
+;;   (dap-gdb-lldb-setup)
+;;   (dap-register-debug-template
+;;    "Rust::LLDB Run Configuration"
+;;    (list :type "lldb"
+;;          :request "launch"
+;;          :name "LLDB::Run"
+;; 	 :gdbpath "rust-lldb"
+;;          :target nil
+;;          :cwd nil)))
+>>>>>>> Stashed changes
