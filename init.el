@@ -472,3 +472,5 @@
 
 (use-package multiple-cursors
   :ensure t)
+
+(setq make-backup-files nil) ;; чтобы не создавать backup файлы с суффиксами ~
