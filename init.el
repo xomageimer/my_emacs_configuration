@@ -346,7 +346,7 @@
 
 (defun my-enlarge-window-horizontally ()
   "Enlarge the window horizontally by 5 columns."
-  (interactive)т
+  (interactive)
   (enlarge-window-horizontally 5))
 
 (defun my-shrink-window-horizontally ()
@@ -434,7 +434,6 @@
   (save-excursion
     (goto-char (point-min))
     (query-replace-regexp text-to-replace replacement-text)))
-
 
 (global-set-key (kbd "C-c C-r") ' my-query-replace-regexp)
 
