@@ -195,3 +195,20 @@
 (use-package lsp-treemacs
   :ensure t)
 (lsp-treemacs-sync-mode 1)
+
+(use-package cff
+  :ensure t)
+
+(require 'cff)
+;; defines shortcut for find source/header file for the current
+;; file
+(add-hook 'c++-mode-hook
+          '(lambda ()
+             (define-key c-mode-base-map (kbd "M-q") 'cff-find-other-file)))
+(add-hook 'c-mode-hook
+          '(lambda ()
+             (define-key c-mode-base-map (kbd "M-q") 'cff-find-other-file)))
+
+;; (use-package modern-cpp-font-lock
+;;   :ensure t)
+;; (setq modern-c++-font-lock-global-mode t)

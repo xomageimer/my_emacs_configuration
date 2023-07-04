@@ -324,7 +324,7 @@
  '(ispell-dictionary nil)
  '(menu-bar-mode nil)
  '(package-selected-packages
-   '(exec-path-from-shell yasnippet srefactor-lisp srefactor ue embrace nerd-icons-dired nerd-icons deadgrep term-projectile projectile-codesearch consult-projectile helm projectile-ripgrep find-file-rg flycheck-clang-tidy fringe-helper realgud-lldb realgud quelpa google-translate pdf-tools solarized-themes lsp-mode lsp-focus flycheck-plantuml markdown-mode cmake-project clang-format+ google-c-style cl-lib cpputils-cmake clang-format edebug-x dap-mode fzf ag unicode-fonts default-font-presets counsel-projectile rg company-lsp projectile cmake-mode yasnippet-snippets realgud-jdb neotree which-key rtags-xref ivy-rtags ac-rtags magit smartparens company solarized-theme vertico consult use-package compat))
+   '(cff modern-cpp-font-lock call-graph exec-path-from-shell yasnippet srefactor-lisp srefactor ue embrace nerd-icons-dired nerd-icons deadgrep term-projectile projectile-codesearch consult-projectile helm projectile-ripgrep find-file-rg flycheck-clang-tidy fringe-helper realgud-lldb realgud quelpa google-translate pdf-tools solarized-themes lsp-mode lsp-focus flycheck-plantuml markdown-mode cmake-project clang-format+ google-c-style cl-lib cpputils-cmake clang-format edebug-x dap-mode fzf ag unicode-fonts default-font-presets counsel-projectile rg company-lsp projectile cmake-mode yasnippet-snippets realgud-jdb neotree which-key rtags-xref ivy-rtags ac-rtags magit smartparens company solarized-theme vertico consult use-package compat))
  '(recentf-mode t)
  '(safe-local-variable-values
    '((flycheck-mode . t)
@@ -478,3 +478,11 @@
   :ensure t)
 
 (setq make-backup-files nil) ;; чтобы не создавать backup файлы с суффиксами ~
+
+(defun restore-unreal-engine-generated ()
+  "Вызывает ue-uht-project и lsp-restart-workspace."
+  (interactive)
+  (ue-uht-project) ;; вызываем ue-uht-project
+  (lsp-restart-workspace)) ;; вызываем lsp-restart-workspace
+
+(global-set-key (kbd "M-w") 'restore-unreal-engine-generated)
