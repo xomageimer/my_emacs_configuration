@@ -480,9 +480,18 @@
 (setq make-backup-files nil) ;; чтобы не создавать backup файлы с суффиксами ~
 
 (defun restore-unreal-engine-generated ()
-  "Вызывает ue-uht-project и lsp-restart-workspace."
+  "Вызывает ue-uht-project и затем lsp-restart-workspace после завершения ue-uht-project."
   (interactive)
-  (ue-uht-project) ;; вызываем ue-uht-project
-  (lsp-restart-workspace)) ;; вызываем lsp-restart-workspace
+  (ue-uht-project)
+  (let ((compilation-buffer (compilation-find-buffer)))
+    (unless compilation-buffer
+      (error "Не удалось найти буфер компиляции"))
+    (set-process-sentinel (get-buffer-process compilation-buffer)
+                          (lambda (process event)
+                            (when (string-prefix-p "finished" event)
+                              (lsp-restart-workspace))
+                            (when (string-prefix-p "exited abnormally" event)
+                              (error "UHT process failed with exit status: %s" (process-exit-status process)))))))
 
-(global-set-key (kbd "M-w") 'restore-unreal-engine-generated)
+
+(global-set-key (kbd "M-o") 'restore-unreal-engine-generated)
