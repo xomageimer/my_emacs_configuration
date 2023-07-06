@@ -209,6 +209,8 @@
           '(lambda ()
              (define-key c-mode-base-map (kbd "M-q") 'cff-find-other-file)))
 
-;; (use-package modern-cpp-font-lock
-;;   :ensure t)
-;; (setq modern-c++-font-lock-global-mode t)
+(use-package tree-sitter
+  :ensure t
+  :hook ((c++-mode c-mode rust-mode haskell-mode glsl-mode) . tree-sitter-hl-mode)
+  :config
+  (global-tree-sitter-mode))
