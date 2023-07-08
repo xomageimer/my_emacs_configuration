@@ -4,6 +4,8 @@
   :commands (lsp lsp-deferred)
   :config (setq lsp-idle-delay 0.500))
 
+(add-to-list 'auto-mode-alist '("\\.inl\\'" . c++-mode))
+
 ;(setq lsp-clients-clangd-args '("--log=verbose"))
 
 ;(setq lsp-log-io t)
@@ -214,3 +216,4 @@
   :hook ((c++-mode c-mode rust-mode haskell-mode glsl-mode) . tree-sitter-hl-mode)
   :config
   (global-tree-sitter-mode))
+
