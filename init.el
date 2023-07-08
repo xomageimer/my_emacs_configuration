@@ -2,6 +2,7 @@
 (global-set-key (kbd "C-c b") 'beginning-of-buffer)
 (global-set-key (kbd "C-c n") 'end-of-buffer)
 
+(setq make-backup-files nil) ; stop creating ~ files
 ;;; восстанавливать последнее состояние буфера
 (desktop-save-mode 1)
 
@@ -495,3 +496,7 @@
 
 
 (global-set-key (kbd "M-o") 'restore-unreal-engine-generated)
+
+(require 'server)
+(when (not (server-running-p))
+  (server-start))
