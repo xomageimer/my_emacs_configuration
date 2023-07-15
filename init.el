@@ -325,7 +325,7 @@
  '(ispell-dictionary nil)
  '(menu-bar-mode nil)
  '(package-selected-packages
-   '(json-mode ejson-mode csharp-mode project tree-sitter-langs ccls multiple-cursors cff modern-cpp-font-lock call-graph exec-path-from-shell yasnippet srefactor-lisp srefactor ue embrace nerd-icons-dired nerd-icons deadgrep term-projectile projectile-codesearch consult-projectile helm projectile-ripgrep find-file-rg flycheck-clang-tidy fringe-helper realgud-lldb realgud quelpa google-translate pdf-tools solarized-themes lsp-mode lsp-focus flycheck-plantuml markdown-mode cmake-project clang-format+ google-c-style cl-lib cpputils-cmake clang-format edebug-x dap-mode fzf ag unicode-fonts default-font-presets counsel-projectile rg company-lsp projectile cmake-mode yasnippet-snippets realgud-jdb neotree which-key rtags-xref ivy-rtags ac-rtags magit smartparens company solarized-theme vertico consult use-package compat))
+   '(undo-fu json-mode ejson-mode csharp-mode project tree-sitter-langs ccls multiple-cursors cff modern-cpp-font-lock call-graph exec-path-from-shell yasnippet srefactor-lisp srefactor ue embrace nerd-icons-dired nerd-icons deadgrep term-projectile projectile-codesearch consult-projectile helm projectile-ripgrep find-file-rg flycheck-clang-tidy fringe-helper realgud-lldb realgud quelpa google-translate pdf-tools solarized-themes lsp-mode lsp-focus flycheck-plantuml markdown-mode cmake-project clang-format+ google-c-style cl-lib cpputils-cmake clang-format edebug-x dap-mode fzf ag unicode-fonts default-font-presets counsel-projectile rg company-lsp projectile cmake-mode yasnippet-snippets realgud-jdb neotree which-key rtags-xref ivy-rtags ac-rtags magit smartparens company solarized-theme vertico consult use-package compat))
  '(recentf-mode t)
  '(safe-local-variable-values
    '((flycheck-mode . t)
@@ -506,3 +506,13 @@
   :ensure t
   :config
   (add-hook 'csharp-mode-hook 'lsp-deferred))
+
+;; для redo/undo
+(use-package undo-fu
+  :ensure t)
+
+;; Назначьте C-. для undo
+(global-set-key (kbd "C-/") 'undo-fu-only-undo)
+
+;; Назначьте C-? для redo
+(global-set-key (kbd "C-?") 'undo-fu-only-redo)
