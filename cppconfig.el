@@ -6,7 +6,7 @@
 
 (add-to-list 'auto-mode-alist '("\\.inl\\'" . c++-mode))
 
-;(setq lsp-clients-clangd-args '("--log=verbose"))
+(setq lsp-clients-clangd-args '("--pch-storage=disk" "--background-index=1" "-j=8"))
 
 ;(setq lsp-log-io t)
 
@@ -198,6 +198,12 @@
   :ensure t)
 (lsp-treemacs-sync-mode 1)
 
+(use-package tree-sitter
+  :ensure t
+  :hook ((c++-mode c-mode rust-mode haskell-mode glsl-mode) . tree-sitter-hl-mode)
+  :config
+  (global-tree-sitter-mode))
+
 (use-package cff
   :ensure t)
 
@@ -210,10 +216,3 @@
 (add-hook 'c-mode-hook
           '(lambda ()
              (define-key c-mode-base-map (kbd "M-q") 'cff-find-other-file)))
-
-(use-package tree-sitter
-  :ensure t
-  :hook ((c++-mode c-mode rust-mode haskell-mode glsl-mode) . tree-sitter-hl-mode)
-  :config
-  (global-tree-sitter-mode))
-
