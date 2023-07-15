@@ -484,7 +484,7 @@
   "Вызывает ue-uht-project и затем lsp-restart-workspace после завершения ue-uht-project."
   (interactive)
   (ue-uht-project)
-  (let ((compilation-buffer (compilation-find-buffer)))
+  (let ((compilation-buffer (compilation-find-buffer "avoid")))
     (unless compilation-buffer
       (error "Не удалось найти буфер компиляции"))
     (set-process-sentinel (get-buffer-process compilation-buffer)
@@ -493,7 +493,6 @@
                               (lsp-restart-workspace))
                             (when (string-prefix-p "exited abnormally" event)
                               (error "UHT process failed with exit status: %s" (process-exit-status process)))))))
-
 
 (global-set-key (kbd "M-o") 'restore-unreal-engine-generated)
 
