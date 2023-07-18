@@ -301,7 +301,7 @@
 (load-user-file "buildconfig.el")
 
 ;; load ue configuration
-(load-user-file "ue/ue.el")
+;;(load-user-file "ue/ue.el")
 
 ;; load for marco paintin
 ;;(load-user-file "deffunctions.el")
