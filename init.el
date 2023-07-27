@@ -1,3 +1,5 @@
+(setq visible-bell nil)
+
 ;;; хоткеи для перехода в конец и начало буфера
 (global-set-key (kbd "C-c b") 'beginning-of-buffer)
 (global-set-key (kbd "C-c n") 'end-of-buffer)
@@ -516,3 +518,26 @@
 
 ;; Назначьте C-? для redo
 (global-set-key (kbd "C-?") 'undo-fu-only-redo)
+
+(defun my/calculate-time-range ()
+  "Calculate time difference in the format ((число)h (число)m)
+between (часы1:минуты1 - часы2:минуты2) in the current line and add it at the end in parentheses."
+  (interactive)
+  (save-excursion
+    (beginning-of-line)
+    (let ((line (buffer-substring-no-properties (point) (line-end-position)))
+          (result ""))
+      (when (string-match "\\([0-9]+\\):\\([0-9]+\\) - \\([0-9]+\\):\\([0-9]+\\)" line)
+        (let* ((hours1 (string-to-number (match-string 1 line)))
+               (minutes1 (string-to-number (match-string 2 line)))
+               (hours2 (string-to-number (match-string 3 line)))
+               (minutes2 (string-to-number (match-string 4 line)))
+               (total-minutes (+ (* 60 (- hours2 hours1)) (- minutes2 minutes1)))
+               (calculated-hours (/ total-minutes 60))
+               (calculated-minutes (% total-minutes 60)))
+          (setq result (format "(%dh %dm)" calculated-hours calculated-minutes))))
+      (when (not (string= result ""))
+        (end-of-line)
+        (insert " " result)))))
+
+(global-set-key (kbd "C-x C-<up>") 'my/calculate-time-range)
