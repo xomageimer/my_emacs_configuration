@@ -235,7 +235,7 @@
   (dap-register-debug-template
    "C++ LLDB dap"
    (list :type "lldb-vscode"
-         :cwd "~/Downloads/Mython-master/"
+         :cwd nil
          :args nil
          :request "launch"
          :program nil))
