@@ -216,3 +216,4 @@
 (add-hook 'c-mode-hook
           '(lambda ()
              (define-key c-mode-base-map (kbd "M-q") 'cff-find-other-file)))
+(setq cff-enable-auto-header nil)
