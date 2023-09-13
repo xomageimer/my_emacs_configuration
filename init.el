@@ -41,7 +41,7 @@
       scroll-margin 5
       scroll-step 1
       scroll-conservatively 1000
-      scroll-preserve-screen-position 1)   
+      scroll-preserve-screen-position 1)
 ;;; <===== настройки для плавного скролинга и получения последних файлов
 
 (setq use-package-always-ensure t)
@@ -70,10 +70,10 @@
   :config (smartparens-global-mode 1))
 ;;; <==== smartparens
 
-;;; ====> Пакет Ansi-color в Emacs предназначен для работы с текстом, содержащим ANSI-цветовые коды. 
+;;; ====> Пакет Ansi-color в Emacs предназначен для работы с текстом, содержащим ANSI-цветовые коды.
 (use-package ansi-color
   :ensure t)
-;;; <==== Ansi-color. 
+;;; <==== Ansi-color.
 
 ;;; ====> Пакет Neotree в Emacs предназначен для работы с файловой системой и навигации по файлам и директория
 (use-package neotree
@@ -317,24 +317,86 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(ansi-color-names-vector
+   ["#01323d" "#ec423a" "#93a61a" "#c49619" "#3c98e0" "#e2468f" "#3cafa5" "#60767e"])
+ '(compilation-message-face 'default)
+ '(cua-global-mark-cursor-color "#3cafa5")
+ '(cua-normal-cursor-color "#8d9fa1")
+ '(cua-overwrite-cursor-color "#c49619")
+ '(cua-read-only-cursor-color "#93a61a")
  '(custom-enabled-themes '(solarized-dark-high-contrast))
  '(custom-safe-themes
-   '("833ddce3314a4e28411edf3c6efde468f6f2616fc31e17a62587d6a9255f4633" "d89e15a34261019eec9072575d8a924185c27d3da64899905f8548cbd9491a36" "00445e6f15d31e9afaa23ed0d765850e9cd5e929be5e8e63b114a3346236c44c" "285d1bf306091644fb49993341e0ad8bafe57130d9981b680c1dbd974475c5c7" "830877f4aab227556548dc0a28bf395d0abe0e3a0ab95455731c9ea5ab5fe4e1" "3e200d49451ec4b8baa068c989e7fba2a97646091fd555eca0ee5a1386d56077" "51ec7bfa54adf5fff5d466248ea6431097f5a18224788d0bd7eb1257a4f7b773" "7f1d414afda803f3244c6fb4c2c64bea44dac040ed3731ec9d75275b9e831fe5" "fee7287586b17efbfda432f05539b58e86e059e78006ce9237b8732fde991b4c" default))
+   '("02fefdfc9a0c7256a10c8794a4985c9c70c5fbf674873b66807e8143e02c81a7" "833ddce3314a4e28411edf3c6efde468f6f2616fc31e17a62587d6a9255f4633" "d89e15a34261019eec9072575d8a924185c27d3da64899905f8548cbd9491a36" "00445e6f15d31e9afaa23ed0d765850e9cd5e929be5e8e63b114a3346236c44c" "285d1bf306091644fb49993341e0ad8bafe57130d9981b680c1dbd974475c5c7" "830877f4aab227556548dc0a28bf395d0abe0e3a0ab95455731c9ea5ab5fe4e1" "3e200d49451ec4b8baa068c989e7fba2a97646091fd555eca0ee5a1386d56077" "51ec7bfa54adf5fff5d466248ea6431097f5a18224788d0bd7eb1257a4f7b773" "7f1d414afda803f3244c6fb4c2c64bea44dac040ed3731ec9d75275b9e831fe5" "fee7287586b17efbfda432f05539b58e86e059e78006ce9237b8732fde991b4c" default))
+ '(fci-rule-color "#01323d")
  '(gdb-many-windows t)
  '(global-display-line-numbers-mode t)
+ '(highlight-changes-colors '("#e2468f" "#7a7ed2"))
+ '(highlight-symbol-colors
+   '("#3c6f408d329d" "#0c4a45f64ce3" "#486e33913532" "#1fac3bea568d" "#2ec943ac3324" "#449935a7314d" "#0b04411b5986"))
+ '(highlight-symbol-foreground-color "#9eacac")
+ '(highlight-tail-colors
+   '(("#01323d" . 0)
+     ("#687f00" . 20)
+     ("#008981" . 30)
+     ("#0069b0" . 50)
+     ("#936d00" . 60)
+     ("#a72e01" . 70)
+     ("#a81761" . 85)
+     ("#01323d" . 100)))
+ '(hl-bg-colors
+   '("#936d00" "#a72e01" "#ae1212" "#a81761" "#3548a2" "#0069b0" "#008981" "#687f00"))
+ '(hl-fg-colors
+   '("#002732" "#002732" "#002732" "#002732" "#002732" "#002732" "#002732" "#002732"))
+ '(hl-paren-colors '("#3cafa5" "#c49619" "#3c98e0" "#7a7ed2" "#93a61a"))
  '(ispell-dictionary nil)
+ '(lsp-ui-doc-border "#9eacac")
  '(menu-bar-mode nil)
+ '(nrepl-message-colors
+   '("#ec423a" "#db5823" "#c49619" "#687f00" "#c3d255" "#0069b0" "#3cafa5" "#e2468f" "#7a7ed2"))
  '(package-selected-packages
-   '(ws-butler undo-fu json-mode ejson-mode csharp-mode project tree-sitter-langs ccls multiple-cursors cff modern-cpp-font-lock call-graph exec-path-from-shell yasnippet srefactor-lisp srefactor ue embrace nerd-icons-dired nerd-icons deadgrep term-projectile projectile-codesearch consult-projectile helm projectile-ripgrep find-file-rg flycheck-clang-tidy fringe-helper realgud-lldb realgud quelpa google-translate pdf-tools solarized-themes lsp-mode lsp-focus flycheck-plantuml markdown-mode cmake-project clang-format+ google-c-style cl-lib cpputils-cmake clang-format edebug-x dap-mode fzf ag unicode-fonts default-font-presets counsel-projectile rg company-lsp projectile cmake-mode yasnippet-snippets realgud-jdb neotree which-key rtags-xref ivy-rtags ac-rtags magit smartparens company solarized-theme vertico consult use-package compat))
+   '(sexy-monochrome-theme ws-butler undo-fu json-mode ejson-mode csharp-mode project tree-sitter-langs ccls multiple-cursors cff modern-cpp-font-lock call-graph exec-path-from-shell yasnippet srefactor-lisp srefactor ue embrace nerd-icons-dired nerd-icons deadgrep term-projectile projectile-codesearch consult-projectile helm projectile-ripgrep find-file-rg flycheck-clang-tidy fringe-helper realgud-lldb realgud quelpa google-translate pdf-tools solarized-themes lsp-mode lsp-focus flycheck-plantuml markdown-mode cmake-project clang-format+ google-c-style cl-lib cpputils-cmake clang-format edebug-x dap-mode fzf ag unicode-fonts default-font-presets counsel-projectile rg company-lsp projectile cmake-mode yasnippet-snippets realgud-jdb neotree which-key rtags-xref ivy-rtags ac-rtags magit smartparens company solarized-theme vertico consult use-package compat))
+ '(pos-tip-background-color "#01323d")
+ '(pos-tip-foreground-color "#9eacac")
  '(recentf-mode t)
  '(safe-local-variable-values
    '((flycheck-mode . t)
      (flycheck-clang-tidy-checks . "*, -readability-identifier-naming")))
+ '(smartrep-mode-line-active-bg (solarized-color-blend "#93a61a" "#01323d" 0.2))
  '(tab-bar-mode t)
  '(tab-stop-list
    '(4 8 12 16 20 24 28 32 36 40 44 48 52 56 60 64 68 72 76 80 84 88 92 96 100 104 108 112 116 120))
+ '(term-default-bg-color "#002732")
+ '(term-default-fg-color "#8d9fa1")
  '(tool-bar-mode nil)
- '(warning-suppress-types '(((dap-variables-expand-variable)))))
+ '(vc-annotate-background nil)
+ '(vc-annotate-background-mode nil)
+ '(vc-annotate-color-map
+   '((20 . "#ec423a")
+     (40 . "#dace73be2daa")
+     (60 . "#d060861a2512")
+     (80 . "#c49619")
+     (100 . "#b55b9c82193e")
+     (120 . "#ad589f3e1963")
+     (140 . "#a513a1d61994")
+     (160 . "#9c81a44d19d1")
+     (180 . "#93a61a")
+     (200 . "#84b7a96352b1")
+     (220 . "#7a4daad96863")
+     (240 . "#6cbbac617d20")
+     (260 . "#5a04adfd9175")
+     (280 . "#3cafa5")
+     (300 . "#41c4a690bd74")
+     (320 . "#41d4a1f2c946")
+     (340 . "#40129d4ad514")
+     (360 . "#3c98e0")))
+ '(vc-annotate-very-old-color nil)
+ '(warning-suppress-types '(((dap-variables-expand-variable))))
+ '(weechat-color-list
+   '(unspecified "#002732" "#01323d" "#ae1212" "#ec423a" "#687f00" "#93a61a" "#936d00" "#c49619" "#0069b0" "#3c98e0" "#a81761" "#e2468f" "#008981" "#3cafa5" "#8d9fa1" "#60767e"))
+ '(xterm-color-names
+   ["#01323d" "#ec423a" "#93a61a" "#c49619" "#3c98e0" "#e2468f" "#3cafa5" "#faf3e0"])
+ '(xterm-color-names-bright
+   ["#002732" "#db5823" "#62787f" "#60767e" "#8d9fa1" "#7a7ed2" "#9eacac" "#ffffee"]))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
