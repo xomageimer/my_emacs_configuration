@@ -216,6 +216,7 @@
 (add-hook 'c-mode-hook
           '(lambda ()
              (define-key c-mode-base-map (kbd "M-q") 'cff-find-other-file)))
+(setq cff-enable-auto-header nil)
 
 (use-package dap-mode
   :defer
@@ -248,3 +249,4 @@
       (unless (file-exists-p filename)
 	(copy-file default filename))
       (find-file-existing filename))))
+
