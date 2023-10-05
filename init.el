@@ -302,6 +302,8 @@
 ;; load cmake configuration
 (load-user-file "buildconfig.el")
 
+(load-user-file "pyconfig.el")
+
 ;; load ue configuration
 ;;(load-user-file "ue/ue.el")
 
@@ -327,7 +329,7 @@
  '(ispell-dictionary nil)
  '(menu-bar-mode nil)
  '(package-selected-packages
-   '(flyspell-correct bluetooth steam leaf ws-butler alect-themes sexy-monochrome-theme math-symbols bm rainbow-delimiters leetcode bitbucket harpoon equake www-synonyms emamux emacsql-mysql emacsql db-pg db web-beautify weather-metno undo-fu json-mode ejson-mode csharp-mode project tree-sitter-langs ccls multiple-cursors cff modern-cpp-font-lock call-graph exec-path-from-shell yasnippet srefactor-lisp srefactor ue embrace nerd-icons-dired nerd-icons deadgrep term-projectile projectile-codesearch consult-projectile helm projectile-ripgrep find-file-rg flycheck-clang-tidy fringe-helper realgud-lldb realgud quelpa google-translate pdf-tools solarized-themes lsp-mode lsp-focus flycheck-plantuml markdown-mode cmake-project clang-format+ google-c-style cl-lib cpputils-cmake clang-format edebug-x dap-mode fzf ag unicode-fonts default-font-presets counsel-projectile rg company-lsp projectile cmake-mode yasnippet-snippets realgud-jdb neotree which-key rtags-xref ivy-rtags ac-rtags magit smartparens company solarized-theme vertico consult use-package compat))
+   '(python-black lsp-python-ms flyspell-correct bluetooth steam leaf ws-butler alect-themes sexy-monochrome-theme math-symbols bm rainbow-delimiters leetcode bitbucket harpoon equake www-synonyms emamux emacsql-mysql emacsql db-pg db web-beautify weather-metno undo-fu json-mode ejson-mode csharp-mode project tree-sitter-langs ccls multiple-cursors cff modern-cpp-font-lock call-graph exec-path-from-shell yasnippet srefactor-lisp srefactor ue embrace nerd-icons-dired nerd-icons deadgrep term-projectile projectile-codesearch consult-projectile helm projectile-ripgrep find-file-rg flycheck-clang-tidy fringe-helper realgud-lldb realgud quelpa google-translate pdf-tools solarized-themes lsp-mode lsp-focus flycheck-plantuml markdown-mode cmake-project clang-format+ google-c-style cl-lib cpputils-cmake clang-format edebug-x dap-mode fzf ag unicode-fonts default-font-presets counsel-projectile rg company-lsp projectile cmake-mode yasnippet-snippets realgud-jdb neotree which-key rtags-xref ivy-rtags ac-rtags magit smartparens company solarized-theme vertico consult use-package compat))
  '(recentf-mode t)
  '(safe-local-variable-values
    '((flycheck-mode . t)
@@ -614,7 +616,7 @@ between (часы1:минуты1 - часы2:минуты2) in the current line 
 
 (use-package ws-butler
   :ensure t
-  :config1
+  :config
   (setq ws-butler-keep-whitespace-before-point nil)
   (setq ws-butler-global-exempt-modes
         '(special-mode comint-mode eshell-mode))
