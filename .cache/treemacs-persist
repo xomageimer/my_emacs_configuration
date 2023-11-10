@@ -1,0 +1,9 @@
+* Default
+** main
+ - path :: ~/main
+** proof_of_concept_7013
+ - path :: ~/proof_of_concept_7013
+** Documents
+ - path :: ~/Documents
+** bits
+ - path :: /usr/include/c++/12.1.0/bits
